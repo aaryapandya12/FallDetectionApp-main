@@ -16,29 +16,22 @@ import { LinearGradient } from "expo-linear-gradient";
 const HomeScreen = ({ navigation }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Slidable images for the carousel
+  //   // Slidable images for the carousel
   const carouselImages = [
-    {
-      id: 1,
-      uri: "https://via.placeholder.com/300", // Replace with actual image URL
-    },
-    {
-      id: 2,
-      uri: "https://via.placeholder.com/300", // Replace with actual image URL
-    },
-    {
-      id: 3,
-      uri: "https://via.placeholder.com/300", // Replace with actual image URL
-    },
+    require("../../assets/image1.jpg"), // Corrected path relative to src/components
+    require("../../assets/image2.jpg"),
+    require("../../assets/image4.jpg"),
+    require("../../assets/image5.jpg"),
   ];
 
-  // Key Features of the Project
+  //   // Key Features of the Project
   const keyFeatures = [
     {
       id: 1,
       icon: "heart",
       title: "Health Monitoring",
-      description: "Track heart rate, oxygen levels, and activity in real-time.",
+      description:
+        "Track heart rate, oxygen levels, and activity in real-time.",
       color: "#4CAF50",
     },
     {
@@ -100,9 +93,9 @@ const HomeScreen = ({ navigation }) => {
           activeDotStyle={styles.activeDot}
           onIndexChanged={(index) => setCurrentSlide(index)}
         >
-          {carouselImages.map((image) => (
-            <View key={image.id} style={styles.slide}>
-              <Image source={{ uri: image.uri }} style={styles.carouselImage} />
+          {carouselImages.map((image, index) => (
+            <View key={index} style={styles.slide}>
+              <Image source={image} style={styles.carouselImage} />
               <View style={styles.imageOverlay} />
             </View>
           ))}
@@ -131,6 +124,14 @@ const HomeScreen = ({ navigation }) => {
           ))}
         </ScrollView>
       </View>
+
+      {/* Medicine Reminder Icon */}
+      <TouchableOpacity
+        style={styles.medicineReminderButton}
+        onPress={() => navigation.navigate("MedicineReminder")}
+      >
+        <Ionicons name="medkit" size={28} color="white" />
+      </TouchableOpacity>
 
       {/* Footer with activeScreen prop */}
       <Footer navigation={navigation} activeScreen="HomeScreen" />
@@ -268,6 +269,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
     fontFamily: "Roboto-Regular",
+  },
+  medicineReminderButton: {
+    position: "absolute",
+    bottom: 80,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FF5252",
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 });
 

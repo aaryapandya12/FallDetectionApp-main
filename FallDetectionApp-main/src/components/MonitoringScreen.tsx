@@ -187,7 +187,7 @@ const MonitoringScreen: React.FC = () => {
         </View>
       ))}
 
-      <Footer activeScreen="MonitoringScreen" navigation={navigator} />
+      {/* <Footer activeScreen="MonitoringScreen" navigation={navigator} /> */}
     </ScrollView>
   );
 };

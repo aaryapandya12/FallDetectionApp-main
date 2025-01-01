@@ -9,8 +9,18 @@ import HomeScreen from '../components/HomeScreen';
 import SettingsScreen from '../components/SettingsScreen';
 import MonitoringScreen from '../components/MonitoringScreen';
 import NotificationsScreen from '../components/NotificationsScreen';
-import LoginScreen from '../components/LoginScreen'; // Added LoginScreen
-import WatchScreen from '../components/WatchScreen'
+import LoginScreen from '../components/LoginScreen';
+import WatchScreen from '../components/WatchScreen';
+import MedicineReminderScreen from '../components/MedicineReminder'; // Import the new screen
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 // Define the parameter list for the screens
 export type RootStackParamList = {
@@ -20,8 +30,9 @@ export type RootStackParamList = {
   SettingsScreen: undefined;
   MonitoringScreen: undefined;
   NotificationsScreen: undefined;
-  LoginScreen: undefined; // Added LoginScreen
+  LoginScreen: undefined;
   WatchScreen: undefined;
+  MedicineReminder: undefined; // Add MedicineReminder screen
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -29,7 +40,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const AppNavigator: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Register">
+      <Stack.Navigator initialRouteName="HomeScreen">
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
@@ -62,14 +73,18 @@ const AppNavigator: React.FC = () => {
         />
         <Stack.Screen
           name="LoginScreen"
-          component={LoginScreen} // New LoginScreen added
+          component={LoginScreen}
           options={{ headerShown: false }}
         />
-        {/* Uncomment and add WatchScreen if you want */}
         <Stack.Screen
           name="WatchScreen"
           component={WatchScreen}
           options={{ title: 'Watch' }}
+        />
+        <Stack.Screen
+          name="MedicineReminder"
+          component={MedicineReminderScreen} // Add MedicineReminder screen
+          options={{ title: 'Medicine Reminder' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -77,7 +92,4 @@ const AppNavigator: React.FC = () => {
 };
 
 export default AppNavigator;
-
-
-
 

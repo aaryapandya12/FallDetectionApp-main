@@ -21,7 +21,7 @@ const NotificationsScreen: React.FC = () => {
       </View>
 
       {/* Footer */}
-      <Footer activeScreen="MonitoringScreen" navigation={navigator} />{/* Imported Footer component */}
+      {/* <Footer activeScreen="MonitoringScreen" navigation={navigator} /> */}
     </ScrollView>
   );
 };
