@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   Register: undefined;
@@ -21,14 +22,23 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (email && username && password && confirmPassword) {
       if (password !== confirmPassword) {
         Alert.alert('Password Mismatch', 'Your passwords do not match.');
         return;
       }
-      Alert.alert('Successfully Registered', 'You have been registered successfully!');
-      navigation.navigate('PersonalDetail');
+  
+      try {
+        const userData = { email, username, password };
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        // Store login state
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+        Alert.alert('Successfully Registered', 'You have been registered successfully!');
+        navigation.navigate('PersonalDetail');
+      } catch (error) {
+        Alert.alert('Error', 'There was an error saving your data.');
+      }
     } else {
       Alert.alert('Incomplete Fields', 'Please fill in all fields');
     }

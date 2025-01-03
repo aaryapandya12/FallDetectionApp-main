@@ -1,272 +1,337 @@
-import React, { useState, useEffect } from "react";
-import { ScrollView, Text, View, StyleSheet,Dimensions } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { LineChart } from "react-native-chart-kit";
-import Footer from "./Footer";
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Text, View, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import Footer from './Footer'; // Assuming Footer component exists
+import * as Progress from 'react-native-progress'; // For progress bar
 
-// Mock data for monitoring charts
-const heartRateData = {
-  labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-  datasets: [
-    {
-      data: [70, 75, 72, 78, 80],
-    },
-  ],
+type RootStackParamList = {
+  MonitoringScreen: undefined;
+  HomeScreen: undefined;
+  HeartScreen:undefined;
+  Pressure:undefined;
+  TemperatureScreen:undefined;
+  OxygenScreen:undefined;
+  Footsteps:undefined;
 };
 
-const bpData = {
-  labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-  datasets: [
-    {
-      data: [120, 122, 118, 121, 119],
-    },
-  ],
-};
+type MonitoringScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MonitoringScreen'>;
 
-const temperatureData = {
-  labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-  datasets: [
-    {
-      data: [98.1, 98.4, 98.5, 98.7, 98.2],
-    },
-  ],
-};
+interface MonitoringScreenProps {
+  navigation: MonitoringScreenNavigationProp;
+}
 
-// Dummy fall detection records (replace this with actual data)
-const initialFallRecords = [
-  { angle: 45, timestamp: "2024-12-01 14:30", description: "Fall detected while sitting" },
-  { angle: 78, timestamp: "2024-12-02 10:00", description: "Fall detected while walking" },
-  { angle: 56, timestamp: "2024-12-05 16:45", description: "Fall detected while standing" },
-];
+const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
+  const [heartRate, setHeartRate] = useState(74);
+  const [bloodPressure, setBloodPressure] = useState({ systolic: 120, diastolic: 80 });
+  const [temperature, setTemperature] = useState(98.7);
+  const [bloodOxygen, setBloodOxygen] = useState(97); // Blood Oxygen state
+  const [posture, setPosture] = useState("Stable");
+  const [fallRisk, setFallRisk] = useState("Low");
+  const [footsteps, setFootsteps] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
 
-const MonitoringScreen: React.FC = () => {
-  const [fallRecords, setFallRecords] = useState(initialFallRecords);
-  const heartRateStatus = 74; // Example value
-  const bpStatus = 120; // Example systolic BP value
-  const temperatureStatus = 98.7; // Example temperature value
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeartRate(Math.floor(Math.random() * (120 - 60 + 1) + 60));
+      setBloodPressure({
+        systolic: Math.floor(Math.random() * (180 - 90 + 1) + 90),
+        diastolic: Math.floor(Math.random() * (120 - 60 + 1) + 60),
+      });
+      setTemperature(Math.floor(Math.random() * (101 - 96 + 1) + 96));
+      setBloodOxygen(Math.floor(Math.random() * (100 - 90 + 1) + 90));
+      setPosture(Math.random() > 0.5 ? "Stable" : "Unstable");
+      setFallRisk(Math.random() > 0.5 ? "Low" : "High");
+      setFootsteps(Math.floor(Math.random() * 5000));
+      setLastUpdated(new Date());
+    }, 5000);
 
-  // Handle fall detection logic (replace this with actual logic)
-  const handleFallDetection = (x: number, y: number, z: number) => {
-    const angle = calculateFallAngle(x, y, z); // Calculate fall angle
-    const timestamp = new Date().toISOString(); // Get current time
+    return () => clearInterval(interval);
+  }, []);
 
-    // Store fall data in the state
-    const newFallRecord = { angle, timestamp, description: "Fall detected" };
-    setFallRecords((prevRecords) => [newFallRecord, ...prevRecords]);
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    };
+    return date.toLocaleDateString('en-US', options);
   };
 
-  // Simulate fall detection once the component mounts or whenever sensor data changes
-  useEffect(() => {
-    // Dummy fall detection (replace this with actual sensor data)
-    const x = 1.0;
-    const y = 2.0;
-    const z = 0.5;
-
-    handleFallDetection(x, y, z); // Example fall detection logic
-  }, []); // This empty dependency array ensures that the fall detection runs only once when the component mounts
-
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Ionicons
-          name="heart"
-          size={100}
-          color={heartRateStatus < 60 || heartRateStatus > 100 ? "red" : "#4CAF50"}
-        />
-        <Text style={styles.title}>Monitoring in Progress...</Text>
-      </View>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollableContent}>
+        <Text style={styles.title}>Live Health Monitoring</Text>
+        <Text style={styles.subtitle}>Empowering you with real-time health insights.</Text>
 
-      <Text style={styles.subtitle}>Real-time Health Data</Text>
+        {/* Health Metrics Section */}
+        <View style={styles.cardContainer}>
+          {/* Heart Rate Card */}
+          <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('HeartScreen')}>
+            <Text style={styles.cardTitle}>Heart Rate</Text>
+            <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
+            <View style={styles.cardContent}>
+              <Image
+                source={require("../../assets/h2.jpg")}
+                style={[styles.icon, { width: 40, height: 40 }]}
+                resizeMode="contain"
+              />
+              <View style={styles.cardDetails}>
+                <Text style={styles.cardValue}>{heartRate} bpm</Text>
+                <Progress.Bar
+                  progress={heartRate / 120}
+                  width={200}
+                  height={10}
+                  color="#8971d0"
+                  style={{ marginTop: 10 }}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
 
-      <View style={styles.dataContainer}>
-        <View style={styles.dataCard}>
-          <Ionicons
-            name="heart"
-            size={30}
-            color={heartRateStatus < 60 || heartRateStatus > 100 ? "red" : "#4CAF50"}
-          />
-          <Text
-            style={[styles.dataText, { color: heartRateStatus < 60 || heartRateStatus > 100 ? "red" : "#4CAF50" }]}
-          >
-            Heart Rate: {heartRateStatus} bpm
-          </Text>
+          {/* Blood Pressure Card */}
+          <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pressure')}>
+            <Text style={styles.cardTitle}>Blood Pressure</Text>
+            <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
+            <View style={styles.cardContent}>
+              <Image
+                source={require("../../assets/bicon.jpg")}
+                style={[styles.icon, { width: 40, height: 40 }]}
+                resizeMode="contain"
+              />
+              <View style={styles.cardDetails}>
+                <Text style={styles.cardValue}>
+                  {bloodPressure.systolic}/{bloodPressure.diastolic} mmHg
+                </Text>
+                <Progress.Bar
+                  progress={(bloodPressure.systolic - 90) / 90}
+                  width={200}
+                  height={10}
+                  color="#35bcbf"
+                  style={{ marginTop: 10 }}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          {/* Body Temperature Card */}
+          <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('TemperatureScreen')}>
+            <Text style={styles.cardTitle}>Body Temperature</Text>
+            <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
+            <View style={styles.cardContent}>
+              <Image
+                source={require("../../assets/t2icon.png")}
+                style={[styles.icon, { width: 40, height: 40 }]}
+                resizeMode="contain"
+              />
+              <View style={styles.cardDetails}>
+                <Text style={styles.cardValue}>{temperature}°F</Text>
+                <Progress.Bar
+                  progress={(temperature - 96) / 5}
+                  width={200}
+                  height={10}
+                  color="#2772db"
+                  style={{ marginTop: 10 }}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          {/* Blood Oxygen Card */}
+          <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('OxygenScreen')}>
+            <Text style={styles.cardTitle}>Blood Oxygen</Text>
+            <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
+            <View style={styles.cardContent}>
+              <Ionicons name="water" size={40} color="#2b6cb0" style={styles.icon} />
+              <View style={styles.cardDetails}>
+                <Text style={styles.cardValue}>{bloodOxygen}%</Text>
+                <Progress.Bar
+                  progress={bloodOxygen / 100}
+                  width={200}
+                  height={10}
+                  color="#00b894"
+                  style={{ marginTop: 10 }}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          {/* Footsteps Card */}
+          <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Footsteps')}>
+            <Text style={styles.cardTitle}>Footsteps</Text>
+            <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
+            <View style={styles.cardContent}>
+              <Ionicons name="footsteps" size={40} color="#2b6cb0" style={styles.icon} />
+              <View style={styles.cardDetails}>
+                <Text style={styles.cardValue}>{footsteps} steps</Text>
+                <Progress.Bar
+                  progress={footsteps / 10000}
+                  width={200}
+                  height={10}
+                  color="#0092ca"
+                  style={{ marginTop: 10 }}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          {/* Posture Card */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Posture</Text>
+            <View style={styles.cardContent}>
+              <Ionicons
+                name="warning"
+                size={40}
+                color={posture === "Unstable" ? "#ff9f1a" : "#38a169"}
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.cardValue,
+                  { color: posture === "Unstable" ? "#e53e3e" : "#38a169" },
+                ]}
+              >
+                {posture} (Tilt: 3° forward)
+              </Text>
+            </View>
+          </View>
+
+          {/* Fall Risk Card */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Fall Risk</Text>
+            <View style={styles.cardContent}>
+              <Ionicons
+                name="alert"
+                size={40}
+                color={
+                  fallRisk === "High"
+                    ? "#e53e3e"
+                    : fallRisk === "Moderate"
+                    ? "#ff9f1a"
+                    : "#38a169"
+                }
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.cardValue,
+                  {
+                    color:
+                      fallRisk === "High"
+                        ? "#e53e3e"
+                        : fallRisk === "Moderate"
+                        ? "#ff9f1a"
+                        : "#38a169",
+                  },
+                ]}
+              >
+                {fallRisk}
+              </Text>
+            </View>
+          </View>
         </View>
+      </ScrollView>
 
-        <View style={styles.dataCard}>
-          <Ionicons
-            name="pulse"
-            size={30}
-            color={bpStatus > 130 ? "red" : bpStatus < 90 ? "#FFC107" : "#4CAF50"}
-          />
-          <Text
-            style={[styles.dataText, { color: bpStatus > 130 ? "red" : bpStatus < 90 ? "#FFC107" : "#4CAF50" }]}
-          >
-            Blood Pressure: {bpStatus} mmHg
-          </Text>
-        </View>
-
-        <View style={styles.dataCard}>
-          <Ionicons
-            name="thermometer"
-            size={30}
-            color={temperatureStatus < 97.5 || temperatureStatus > 99.5 ? "red" : "#4CAF50"}
-          />
-          <Text
-            style={[styles.dataText, { color: temperatureStatus < 97.5 || temperatureStatus > 99.5 ? "red" : "#4CAF50" }]}
-          >
-            Temperature: {temperatureStatus}°F
-          </Text>
-        </View>
-      </View>
-
-      <Text style={styles.subtitle}>Health Trends</Text>
-
-      <LineChart
-        data={heartRateData}
-        width={Dimensions.get("window").width - 32}
-        height={220}
-        chartConfig={{
-          backgroundColor: "#4CAF50",
-          backgroundGradientFrom: "#4CAF50",
-          backgroundGradientTo: "#81C784",
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-        }}
-        style={styles.chart}
-      />
-
-      <LineChart
-        data={bpData}
-        width={Dimensions.get("window").width - 32}
-        height={220}
-        chartConfig={{
-          backgroundColor: "#2196F3",
-          backgroundGradientFrom: "#2196F3",
-          backgroundGradientTo: "#64B5F6",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-        }}
-        style={styles.chart}
-      />
-
-      <LineChart
-        data={temperatureData}
-        width={Dimensions.get("window").width - 32}
-        height={220}
-        chartConfig={{
-          backgroundColor: "#FF9800",
-          backgroundGradientFrom: "#FF9800",
-          backgroundGradientTo: "#FFB74D",
-          decimalPlaces: 1,
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-        }}
-        style={styles.chart}
-      />
-
-      <Text style={styles.subtitle}>Fall Detection History</Text>
-
-      {fallRecords.map((record, index) => (
-        <View key={index} style={styles.fallRecord}>
-          <Ionicons name="warning" size={30} color="#FF5252" />
-          <Text style={styles.recordText}>
-            Fall detected at angle: {record.angle}° on {record.timestamp}
-          </Text>
-          <Text style={styles.recordDescription}>{record.description}</Text>
-        </View>
-      ))}
-
-      {/* <Footer activeScreen="MonitoringScreen" navigation={navigator} /> */}
-    </ScrollView>
+      {/* Footer Navigation */}
+      <Footer activeScreen="MonitoringScreen" navigation={navigation} />
+    </View>
   );
-};
-
-const calculateFallAngle = (x: number, y: number, z: number): number => {
-  const angle = Math.atan2(y, Math.sqrt(x * x + z * z)) * (180 / Math.PI);
-  return angle;
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: '#f9f9f9',
   },
-  header: {
-    alignItems: "center",
-    marginVertical: 20,
+  scrollableContent: {
+    flexGrow: 1,
+    paddingBottom: 100,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 10,
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#2b6cb0', // Example: Vibrant blue
+    marginVertical: 10,
+    marginBottom: 5,
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginVertical: 16,
+    fontSize: 15,
+    textAlign: 'center',
+    color: '#555', // Example: Neutral gray
+    marginBottom: 5,
+    lineHeight: 24,
   },
-  dataContainer: {
-    marginBottom: 20,
+  cardContainer: {
+    marginTop: 20,
+    width: '100%',
   },
-  dataCard: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    marginVertical: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
+    width: '90%',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
-  dataText: {
+  cardTitle: {
     fontSize: 18,
-    fontWeight: "600",
-    marginLeft: 16,
+    fontWeight: 'bold',
+    color: '#444',
+    marginBottom: 1,
   },
-  chart: {
-    marginVertical: 16,
-    borderRadius: 16,
+  cardContent: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  fallRecord: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
+  cardDetails: {
+    marginLeft: 12,
   },
-  recordText: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 16,
+  cardValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2b6cb0',
   },
-  recordDescription: {
+  cardSubtitle: {
     fontSize: 14,
-    color: "#666",
-    marginLeft: 16,
+    color: '#888',
+    marginTop: 3,
+    marginBottom: 18,
+  },
+  icon: {
+    width: 40,
+    height: 40,
   },
 });
 
 export default MonitoringScreen;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

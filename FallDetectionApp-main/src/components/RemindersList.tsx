@@ -1,6 +1,7 @@
 // // import React, { useEffect, useState } from 'react';
-// // import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+// // import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, Dimensions } from 'react-native';
 // // import AsyncStorage from '@react-native-async-storage/async-storage';
+// // import { MaterialIcons } from '@expo/vector-icons'; // For icons
 
 // // interface Reminder {
 // //   id: string;
@@ -12,6 +13,7 @@
 // //   endDate: string;
 // //   taken: boolean;
 // //   skipped: boolean;
+// //   numberOfMedications: number; // Added field
 // // }
 
 // // interface Props {
@@ -40,6 +42,12 @@
 // //     loadReminders();
 // //   }, [reminders]); // Reload reminders when the `reminders` prop changes
 
+// //   // Function to check if the reminder time has passed
+// //   const isReminderTimePassed = (reminderTime: Date) => {
+// //     const currentTime = new Date();
+// //     return currentTime >= reminderTime;
+// //   };
+
 // //   return (
 // //     <View style={styles.container}>
 // //       <FlatList
@@ -55,33 +63,48 @@
 // //               </View>
 // //             )}
 // //             <View style={styles.details}>
-// //               <Text style={styles.medicineName}>{item.medicineName}</Text>
-// //               <Text style={styles.description}>{item.medicineDescription}</Text>
-// //               <Text style={styles.time}>⏰ {new Date(item.time).toLocaleTimeString()}</Text>
-// //               <Text style={styles.duration}>📅 {item.startDate} to {item.endDate}</Text>
+// //               <Text style={styles.medicineName} numberOfLines={1} ellipsizeMode="tail">
+// //                 {item.medicineName}
+// //               </Text>
+// //               <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
+// //                 {item.medicineDescription}
+// //               </Text>
+// //               <View style={styles.timeContainer}>
+// //                 <MaterialIcons name="access-time" size={16} color="#555" />
+// //                 <Text style={styles.time}>{new Date(item.time).toLocaleTimeString()}</Text>
+// //               </View>
+// //               <View style={styles.medicationContainer}>
+// //                 <MaterialIcons name="medication" size={16} color="#555" />
+// //                 <Text style={styles.medicationText}>{item.numberOfMedications} pills</Text>
+// //               </View>
 // //             </View>
-// //             <View style={styles.actions}>
-// //               <TouchableOpacity
-// //                 style={[styles.actionButton, styles.takenButton, item.taken && styles.disabledButton]}
-// //                 onPress={() => onTaken(index)}
-// //                 disabled={item.taken || item.skipped}
-// //               >
-// //                 <Text style={styles.actionButtonText}>{item.taken ? 'Taken ✅' : 'Mark as Taken'}</Text>
-// //               </TouchableOpacity>
-// //               <TouchableOpacity
-// //                 style={[styles.actionButton, styles.skippedButton, item.skipped && styles.disabledButton]}
-// //                 onPress={() => onSkipped(index)}
-// //                 disabled={item.skipped || item.taken}
-// //               >
-// //                 <Text style={styles.actionButtonText}>{item.skipped ? 'Skipped ❌' : 'Mark as Skipped'}</Text>
-// //               </TouchableOpacity>
-// //             </View>
+// //             {/* Show "Taken" or "Skipped" options only if the reminder time has passed */}
+// //             {isReminderTimePassed(new Date(item.time)) && (
+// //               <View style={styles.actions}>
+// //                 <TouchableOpacity
+// //                   style={[styles.actionButton, styles.takenButton, item.taken && styles.disabledButton]}
+// //                   onPress={() => onTaken(index)}
+// //                   disabled={item.taken || item.skipped}
+// //                 >
+// //                   <Text style={styles.actionButtonText}>{item.taken ? 'Taken' : 'Taken'}</Text>
+// //                 </TouchableOpacity>
+// //                 <TouchableOpacity
+// //                   style={[styles.actionButton, styles.skippedButton, item.skipped && styles.disabledButton]}
+// //                   onPress={() => onSkipped(index)}
+// //                   disabled={item.skipped || item.taken}
+// //                 >
+// //                   <Text style={styles.actionButtonText}>{item.skipped ? 'Skipped' : 'Skipped'}</Text>
+// //                 </TouchableOpacity>
+// //               </View>
+// //             )}
 // //           </View>
 // //         )}
 // //       />
 // //     </View>
 // //   );
 // // };
+
+// // const { width } = Dimensions.get('window');
 
 // // const styles = StyleSheet.create({
 // //   container: {
@@ -94,25 +117,26 @@
 // //     flexDirection: 'row',
 // //     alignItems: 'center',
 // //     backgroundColor: '#fff',
-// //     borderRadius: 12,
+// //     borderRadius: 16,
 // //     padding: 16,
-// //     marginBottom: 12,
+// //     marginBottom: 16,
 // //     shadowColor: '#000',
-// //     shadowOpacity: 0.1,
-// //     shadowRadius: 6,
-// //     shadowOffset: { width: 0, height: 2 },
-// //     elevation: 3,
+// //     shadowOpacity: 0.2,
+// //     shadowRadius: 10,
+// //     shadowOffset: { width: 0, height: 4 },
+// //     elevation: 5,
+// //     width: width - 32,
 // //   },
 // //   image: {
 // //     width: 60,
 // //     height: 60,
-// //     borderRadius: 30,
+// //     borderRadius: 12,
 // //     marginRight: 16,
 // //   },
 // //   placeholderImage: {
 // //     width: 60,
 // //     height: 60,
-// //     borderRadius: 30,
+// //     borderRadius: 12,
 // //     backgroundColor: '#e0e0e0',
 // //     justifyContent: 'center',
 // //     alignItems: 'center',
@@ -125,28 +149,42 @@
 // //   },
 // //   details: {
 // //     flex: 1,
+// //     marginRight: 16,
 // //   },
 // //   medicineName: {
 // //     fontSize: 18,
 // //     fontWeight: '600',
 // //     color: '#333',
 // //     marginBottom: 4,
+// //     maxWidth: width * 0.5,
 // //   },
 // //   description: {
 // //     fontSize: 14,
 // //     color: '#666',
 // //     marginBottom: 8,
+// //     maxWidth: width * 0.5,
+// //   },
+// //   timeContainer: {
+// //     flexDirection: 'row',
+// //     alignItems: 'center',
+// //     marginBottom: 4,
+// //   },
+// //   medicationContainer: {
+// //     flexDirection: 'row',
+// //     alignItems: 'center',
 // //   },
 // //   time: {
 // //     fontSize: 14,
 // //     color: '#555',
+// //     marginLeft: 4,
 // //   },
-// //   duration: {
+// //   medicationText: {
 // //     fontSize: 14,
 // //     color: '#555',
+// //     marginLeft: 4,
 // //   },
 // //   actions: {
-// //     flexDirection: 'row',
+// //     flexDirection: 'column',
 // //     gap: 8,
 // //   },
 // //   actionButton: {
@@ -155,18 +193,24 @@
 // //     borderRadius: 8,
 // //     alignItems: 'center',
 // //     justifyContent: 'center',
+// //     minWidth: 100,
+// //     shadowColor: '#000',
+// //     shadowOpacity: 0.1,
+// //     shadowRadius: 4,
+// //     shadowOffset: { width: 0, height: 2 },
+// //     elevation: 2,
 // //   },
 // //   takenButton: {
-// //     backgroundColor: '#48BB78',
+// //     backgroundColor: '#e3f2fd',
 // //   },
 // //   skippedButton: {
-// //     backgroundColor: '#F56565',
+// //     backgroundColor: '#ffebee',
 // //   },
 // //   disabledButton: {
-// //     backgroundColor: '#ccc',
+// //     backgroundColor: '#f5f5f5',
 // //   },
 // //   actionButtonText: {
-// //     color: '#fff',
+// //     color: '#1976d2',
 // //     fontSize: 12,
 // //     fontWeight: '500',
 // //   },
@@ -174,9 +218,11 @@
 
 // // export default RemindersList;
 
+
 // import React, { useEffect, useState } from 'react';
 // import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, Dimensions } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { MaterialIcons } from '@expo/vector-icons'; // For icons
 
 // interface Reminder {
 //   id: string;
@@ -188,6 +234,7 @@
 //   endDate: string;
 //   taken: boolean;
 //   skipped: boolean;
+//   numberOfMedications: number; // Added field
 // }
 
 // interface Props {
@@ -216,6 +263,12 @@
 //     loadReminders();
 //   }, [reminders]); // Reload reminders when the `reminders` prop changes
 
+//   // Function to check if the reminder time has passed
+//   const isReminderTimePassed = (reminderTime: Date) => {
+//     const currentTime = new Date();
+//     return currentTime >= reminderTime;
+//   };
+
 //   return (
 //     <View style={styles.container}>
 //       <FlatList
@@ -237,25 +290,34 @@
 //               <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
 //                 {item.medicineDescription}
 //               </Text>
-//               <Text style={styles.time}>⏰ {new Date(item.time).toLocaleTimeString()}</Text>
-//               <Text style={styles.duration}>📅 {item.startDate} to {item.endDate}</Text>
+//               <View style={styles.timeContainer}>
+//                 <MaterialIcons name="access-time" size={16} color="#555" />
+//                 <Text style={styles.time}>{new Date(item.time).toLocaleTimeString()}</Text>
+//               </View>
+//               <View style={styles.medicationContainer}>
+//                 <MaterialIcons name="medication" size={16} color="#555" />
+//                 <Text style={styles.medicationText}>{item.numberOfMedications} pills</Text>
+//               </View>
 //             </View>
-//             <View style={styles.actions}>
-//               <TouchableOpacity
-//                 style={[styles.actionButton, styles.takenButton, item.taken && styles.disabledButton]}
-//                 onPress={() => onTaken(index)}
-//                 disabled={item.taken || item.skipped}
-//               >
-//                 <Text style={styles.actionButtonText}>{item.taken ? 'Taken ✅' : 'Mark as Taken'}</Text>
-//               </TouchableOpacity>
-//               <TouchableOpacity
-//                 style={[styles.actionButton, styles.skippedButton, item.skipped && styles.disabledButton]}
-//                 onPress={() => onSkipped(index)}
-//                 disabled={item.skipped || item.taken}
-//               >
-//                 <Text style={styles.actionButtonText}>{item.skipped ? 'Skipped ❌' : 'Mark as Skipped'}</Text>
-//               </TouchableOpacity>
-//             </View>
+//             {/* Show "Taken" or "Skipped" options only if the reminder time has passed */}
+//             {isReminderTimePassed(new Date(item.time)) && (
+//               <View style={styles.actions}>
+//                 <TouchableOpacity
+//                   style={[styles.actionButton, styles.takenButton, item.taken && styles.disabledButton]}
+//                   onPress={() => onTaken(index)}
+//                   disabled={item.taken || item.skipped}
+//                 >
+//                   <Text style={styles.actionButtonText}>{item.taken ? 'Taken' : 'Mark as Taken'}</Text>
+//                 </TouchableOpacity>
+//                 <TouchableOpacity
+//                   style={[styles.actionButton, styles.skippedButton, item.skipped && styles.disabledButton]}
+//                   onPress={() => onSkipped(index)}
+//                   disabled={item.skipped || item.taken}
+//                 >
+//                   <Text style={styles.actionButtonText}>{item.skipped ? 'Skipped' : 'Mark as Skipped'}</Text>
+//                 </TouchableOpacity>
+//               </View>
+//             )}
 //           </View>
 //         )}
 //       />
@@ -276,26 +338,26 @@
 //     flexDirection: 'row',
 //     alignItems: 'center',
 //     backgroundColor: '#fff',
-//     borderRadius: 12,
+//     borderRadius: 16,
 //     padding: 16,
-//     marginBottom: 12,
+//     marginBottom: 16,
 //     shadowColor: '#000',
 //     shadowOpacity: 0.1,
-//     shadowRadius: 6,
-//     shadowOffset: { width: 0, height: 2 },
-//     elevation: 3,
-//     width: width - 32, // Ensure the card doesn't overflow the screen
+//     shadowRadius: 10,
+//     shadowOffset: { width: 0, height: 4 },
+//     elevation: 5,
+//     width: width - 32,
 //   },
 //   image: {
 //     width: 60,
 //     height: 60,
-//     borderRadius: 30,
+//     borderRadius: 12,
 //     marginRight: 16,
 //   },
 //   placeholderImage: {
 //     width: 60,
 //     height: 60,
-//     borderRadius: 30,
+//     borderRadius: 12,
 //     backgroundColor: '#e0e0e0',
 //     justifyContent: 'center',
 //     alignItems: 'center',
@@ -315,24 +377,35 @@
 //     fontWeight: '600',
 //     color: '#333',
 //     marginBottom: 4,
-//     maxWidth: width * 0.5, // Limit width to prevent overflow
+//     maxWidth: width * 0.5,
 //   },
 //   description: {
 //     fontSize: 14,
 //     color: '#666',
 //     marginBottom: 8,
-//     maxWidth: width * 0.5, // Limit width to prevent overflow
+//     maxWidth: width * 0.5,
+//   },
+//   timeContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 4,
+//   },
+//   medicationContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
 //   },
 //   time: {
 //     fontSize: 14,
 //     color: '#555',
+//     marginLeft: 4,
 //   },
-//   duration: {
+//   medicationText: {
 //     fontSize: 14,
 //     color: '#555',
+//     marginLeft: 4,
 //   },
 //   actions: {
-//     flexDirection: 'column', // Stack buttons vertically
+//     flexDirection: 'column',
 //     gap: 8,
 //   },
 //   actionButton: {
@@ -341,29 +414,41 @@
 //     borderRadius: 8,
 //     alignItems: 'center',
 //     justifyContent: 'center',
-//     minWidth: 100, // Ensure buttons have a minimum width
+//     minWidth: 100,
+//     shadowColor: '#000',
+//     shadowOpacity: 0.1,
+//     shadowRadius: 4,
+//     shadowOffset: { width: 0, height: 2 },
+//     elevation: 2,
 //   },
 //   takenButton: {
-//     backgroundColor: '#48BB78',
+//     backgroundColor: '#e8f5e9', // Soft green background
 //   },
 //   skippedButton: {
-//     backgroundColor: '#F56565',
+//     backgroundColor: '#ffebee', // Soft red background
 //   },
 //   disabledButton: {
-//     backgroundColor: '#ccc',
+//     backgroundColor: '#f5f5f5', // Neutral gray for disabled state
 //   },
 //   actionButtonText: {
-//     color: '#fff',
 //     fontSize: 12,
 //     fontWeight: '500',
+//   },
+//   takenButtonText: {
+//     color: '#2e7d32', // Dark green text for taken button
+//   },
+//   skippedButtonText: {
+//     color: '#c62828', // Dark red text for skipped button
+//   },
+//   disabledButtonText: {
+//     color: '#9e9e9e', // Gray text for disabled state
 //   },
 // });
 
 // export default RemindersList;
 
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, Dimensions, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'; // For icons
 
@@ -377,6 +462,7 @@ interface Reminder {
   endDate: string;
   taken: boolean;
   skipped: boolean;
+  numberOfMedications: number; // Added field
 }
 
 interface Props {
@@ -389,6 +475,7 @@ interface Props {
 
 const RemindersList: React.FC<Props> = ({ reminders, onEdit, onDelete, onTaken, onSkipped }) => {
   const [localReminders, setLocalReminders] = useState<Reminder[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const loadReminders = async () => {
@@ -405,8 +492,53 @@ const RemindersList: React.FC<Props> = ({ reminders, onEdit, onDelete, onTaken, 
     loadReminders();
   }, [reminders]); // Reload reminders when the `reminders` prop changes
 
+  // Function to check if the reminder time has passed
+  const isReminderTimePassed = (reminderTime: Date) => {
+    const currentTime = new Date();
+    return currentTime >= reminderTime;
+  };
+
+  // Function to generate the list of dates and days for the calendar
+  const generateCalendarDates = () => {
+    const dates = [];
+    const today = new Date();
+    for (let i = -3; i <= 3; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      dates.push(date);
+    }
+    return dates;
+  };
+
+  // Function to render the calendar in an oval structure
+  const renderCalendar = () => {
+    const dates = generateCalendarDates();
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    return (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.calendarContainer}>
+        {dates.map((date, index) => {
+          const dayOfMonth = date.getDate();
+          const dayOfWeek = daysOfWeek[date.getDay()];
+          const isCurrentDay = date.toDateString() === currentDate.toDateString();
+
+          return (
+            <View key={index} style={[styles.dateContainer, isCurrentDay && styles.activeDateContainer]}>
+              <Text style={[styles.dayText, isCurrentDay && styles.activeDayText]}>{dayOfWeek}</Text>
+              <Text style={[styles.dateText, isCurrentDay && styles.activeDateText]}>{dayOfMonth}</Text>
+            </View>
+          );
+        })}
+      </ScrollView>
+    );
+  };
+
   return (
     <View style={styles.container}>
+      {/* Render the calendar */}
+      {renderCalendar()}
+
+      {/* Render the reminders list */}
       <FlatList
         data={localReminders}
         keyExtractor={(item) => item.id}
@@ -430,27 +562,30 @@ const RemindersList: React.FC<Props> = ({ reminders, onEdit, onDelete, onTaken, 
                 <MaterialIcons name="access-time" size={16} color="#555" />
                 <Text style={styles.time}>{new Date(item.time).toLocaleTimeString()}</Text>
               </View>
-              <View style={styles.dateContainer}>
-                <MaterialIcons name="date-range" size={16} color="#555" />
-                <Text style={styles.duration}>{item.startDate} to {item.endDate}</Text>
+              <View style={styles.medicationContainer}>
+                <MaterialIcons name="medication" size={16} color="#555" />
+                <Text style={styles.medicationText}>{item.numberOfMedications} pills</Text>
               </View>
             </View>
-            <View style={styles.actions}>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.takenButton, item.taken && styles.disabledButton]}
-                onPress={() => onTaken(index)}
-                disabled={item.taken || item.skipped}
-              >
-                <Text style={styles.actionButtonText}>{item.taken ? 'Taken' : 'Mark as Taken'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.skippedButton, item.skipped && styles.disabledButton]}
-                onPress={() => onSkipped(index)}
-                disabled={item.skipped || item.taken}
-              >
-                <Text style={styles.actionButtonText}>{item.skipped ? 'Skipped' : 'Mark as Skipped'}</Text>
-              </TouchableOpacity>
-            </View>
+            {/* Show "Taken" or "Skipped" options only if the reminder time has passed */}
+            {isReminderTimePassed(new Date(item.time)) && (
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.takenButton, item.taken && styles.disabledButton]}
+                  onPress={() => onTaken(index)}
+                  disabled={item.taken || item.skipped}
+                >
+                  <Text style={styles.actionButtonText}>{item.taken ? 'Taken' : 'Mark as Taken'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.skippedButton, item.skipped && styles.disabledButton]}
+                  onPress={() => onSkipped(index)}
+                  disabled={item.skipped || item.taken}
+                >
+                  <Text style={styles.actionButtonText}>{item.skipped ? 'Skipped' : 'Mark as Skipped'}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         )}
       />
@@ -467,18 +602,57 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
   },
+  calendarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 56,
+    paddingHorizontal: 8,
+  },
+  dateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 70,
+    borderRadius: 40,
+    backgroundColor: '#f5f5f5',
+    marginHorizontal: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
+  },
+  activeDateContainer: {
+    backgroundColor: '#FF7F7F',
+  },
+  dayText: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  activeDayText: {
+    color: '#fff',
+  },
+  dateText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  activeDateText: {
+    color: '#fff',
+  },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 26,
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
     width: width - 32,
   },
   image: {
@@ -523,7 +697,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  dateContainer: {
+  medicationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -532,7 +706,7 @@ const styles = StyleSheet.create({
     color: '#555',
     marginLeft: 4,
   },
-  duration: {
+  medicationText: {
     fontSize: 14,
     color: '#555',
     marginLeft: 4,
@@ -555,18 +729,26 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   takenButton: {
-    backgroundColor: '#48BB78',
+    backgroundColor: '#e8f5e9', // Soft green background
   },
   skippedButton: {
-    backgroundColor: '#F56565',
+    backgroundColor: '#ffebee', // Soft red background
   },
   disabledButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#f5f5f5', // Neutral gray for disabled state
   },
   actionButtonText: {
-    color: '#fff',
     fontSize: 12,
     fontWeight: '500',
+  },
+  takenButtonText: {
+    color: '#2e7d32', // Dark green text for taken button
+  },
+  skippedButtonText: {
+    color: '#c62828', // Dark red text for skipped button
+  },
+  disabledButtonText: {
+    color: '#9e9e9e', // Gray text for disabled state
   },
 });
 

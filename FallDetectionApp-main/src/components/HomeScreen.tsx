@@ -5,41 +5,47 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  Dimensions,
   TouchableOpacity,
+  Dimensions,
+  ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Footer from "./Footer";
 import Swiper from "react-native-swiper";
-import { LinearGradient } from "expo-linear-gradient";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const HomeScreen = ({ navigation }) => {
+type RootStackParamList = {
+  HomeScreen: undefined;
+  PersonalDetail: undefined;
+  MedicineReminder:undefined;
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
+
+const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  //   // Slidable images for the carousel
   const carouselImages = [
-    require("../../assets/image1.jpg"), // Corrected path relative to src/components
+    require("../../assets/image1.jpg"),
     require("../../assets/image2.jpg"),
     require("../../assets/image4.jpg"),
     require("../../assets/image5.jpg"),
   ];
 
-  //   // Key Features of the Project
   const keyFeatures = [
     {
       id: 1,
       icon: "heart",
       title: "Health Monitoring",
-      description:
-        "Track heart rate, oxygen levels, and activity in real-time.",
-      color: "#4CAF50",
+      description: "Track heart rate, oxygen levels, and activity in real-time.",
+      background: require("../../assets/heart2.jpg"),
     },
     {
       id: 2,
       icon: "alert",
       title: "Fall Detection",
       description: "Automatically detect falls and send alerts to caregivers.",
-      color: "#FF5252",
+      background: require("../../assets/fall.jpg"),
     },
     {
       id: 3,
@@ -47,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
       title: "Emergency Contacts",
       description:
         "Quickly connect with family or nearby hospitals in emergencies.",
-      color: "#2196F3",
+      background: require("../../assets/emg3.jpg"),
     },
     {
       id: 4,
@@ -55,77 +61,123 @@ const HomeScreen = ({ navigation }) => {
       title: "GPS Tracking",
       description:
         "Locate the user in case of an emergency for faster assistance.",
-      color: "#FFC107",
+      background: require("../../assets/gps.jpg"),
     },
   ];
 
   return (
     <View style={styles.container}>
-      {/* Navigation Bar at the top */}
+      {/* Navigation Bar */}
       <View style={styles.navbar}>
         <Text style={styles.navText}>Home</Text>
         <TouchableOpacity onPress={() => navigation.navigate("PersonalDetail")}>
-          <Ionicons name="person-circle" size={32} color="white" />
+          <Ionicons name="person-circle" size={40} color="black" />
         </TouchableOpacity>
       </View>
 
-      {/* Welcome Section */}
-      <LinearGradient
-        colors={["#007bff", "#00bfff"]}
-        style={styles.welcomeBackground}
-      >
-        <Text style={styles.welcomeText}>
-          Welcome to our Health Monitoring App
-        </Text>
-        <Text style={styles.subtitleText}>
-          Empowering Safety and Well-being for Elders
-        </Text>
-      </LinearGradient>
+      {/* Main Content */}
+      <ScrollView contentContainerStyle={styles.scrollableContent}>
+        {/* Slidable Image Carousel */}
+        <View style={styles.carouselContainer}>
+          <Swiper
+            autoplay
+            autoplayTimeout={5}
+            showsPagination
+            paginationStyle={styles.pagination}
+            dotStyle={styles.dot}
+            activeDotStyle={styles.activeDot}
+            onIndexChanged={(index) => setCurrentSlide(index)}
+          >
+            {carouselImages.map((image, index) => (
+              <View key={index} style={styles.slide}>
+                <Image source={image} style={styles.carouselImage} />
+                <View style={styles.imageOverlay}>
+                  {index === 0 && (
+                    <Text style={styles.overlayText}>
+                      Be Independent, Be Strong
+                    </Text>
+                  )}
+                  {index === 1 && (
+                    <Text style={styles.overlayText}>
+                      Exercise is the best way to embrace health
+                    </Text>
+                  )}
+                  {index === 2 && (
+                    <Text style={styles.overlayText}>
+                      With love and Care of Beloved one's
+                    </Text>
+                  )}
+                </View>
+              </View>
+            ))}
+          </Swiper>
+        </View>
 
-      {/* Slidable Image Carousel */}
-      <View style={styles.carouselContainer}>
-        <Swiper
-          autoplay
-          autoplayTimeout={5}
-          showsPagination
-          paginationStyle={styles.pagination}
-          dotStyle={styles.dot}
-          activeDotStyle={styles.activeDot}
-          onIndexChanged={(index) => setCurrentSlide(index)}
-        >
-          {carouselImages.map((image, index) => (
-            <View key={index} style={styles.slide}>
-              <Image source={image} style={styles.carouselImage} />
-              <View style={styles.imageOverlay} />
+        {/* Health Overview Card */}
+        <View style={styles.healthOverviewCard}>
+          <Text style={styles.cardTitle}>Health Overview</Text>
+          <View style={styles.cardContent}>
+            <View>
+              <Text style={styles.cardLabel}>Steps</Text>
+              <View style={styles.cardDataWrapper}>
+                <Ionicons name="walk" size={20} color="#111d5e" />
+                <Text style={styles.cardData}>
+                  <Text style={styles.highlight}>1646</Text>/5000 steps
+                </Text>
+              </View>
+
+              <Text style={styles.cardLabel}>Distance</Text>
+              <View style={styles.cardDataWrapper}>
+                <Ionicons name="location" size={20} color="#11144c" />
+                <Text style={styles.cardData}>
+                  <Text style={styles.highlight}>1.16</Text>/5.00 km
+                </Text>
+              </View>
+
+              <Text style={styles.cardLabel}>Calories</Text>
+              <View style={styles.cardDataWrapper}>
+                <Ionicons name="flame" size={20} color="#fa360a" />
+                <Text style={styles.cardData}>
+                  <Text style={styles.highlight}>165</Text>/200 kcal
+                </Text>
+              </View>
             </View>
-          ))}
-        </Swiper>
-      </View>
 
-      {/* Key Features Section */}
-      <View style={styles.featuresContainer}>
-        <Text style={styles.featuresTitle}>Key Features</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.featuresScroll}
-        >
-          {keyFeatures.map((feature) => (
-            <View
-              key={feature.id}
-              style={[styles.featureCard, { backgroundColor: feature.color }]}
-            >
-              <Ionicons name={feature.icon} size={32} color="white" />
-              <Text style={styles.featureTitle}>{feature.title}</Text>
-              <Text style={styles.featureDescription}>
-                {feature.description}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
+            {/* Image of the Watch */}
+            <Image
+              source={require("../../assets/watch.jpg")} // Add the correct path for the watch image
+              style={styles.watchImage}
+            />
+          </View>
+        </View>
 
-      {/* Medicine Reminder Icon */}
+        {/* Key Features Section */}
+        <View style={styles.featuresContainer}>
+          <Text style={styles.featuresTitle}>Key Features</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.featuresScroll}
+          >
+            {keyFeatures.map((feature) => (
+              <ImageBackground
+                key={feature.id}
+                source={feature.background}
+                style={styles.featureCard}
+                imageStyle={styles.featureImage}
+                blurRadius={4}
+              >
+                <Ionicons name={feature.icon as any} size={32} color="white" />
+                <Text style={styles.featureTitle}>{feature.title}</Text>
+                <Text style={styles.featureDescription}>
+                  {feature.description}
+                </Text>
+              </ImageBackground>
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
+
       <TouchableOpacity
         style={styles.medicineReminderButton}
         onPress={() => navigation.navigate("MedicineReminder")}
@@ -133,7 +185,7 @@ const HomeScreen = ({ navigation }) => {
         <Ionicons name="medkit" size={28} color="white" />
       </TouchableOpacity>
 
-      {/* Footer with activeScreen prop */}
+      {/* Footer */}
       <Footer navigation={navigation} activeScreen="HomeScreen" />
     </View>
   );
@@ -143,48 +195,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
+  },
+  scrollableContent: {
+    flexGrow: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
   },
   navbar: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+    marginTop: 30,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    backgroundColor: "#f5f5f5",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
     elevation: 4,
   },
   navText: {
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: "bold",
-    color: "white",
-    fontFamily: "Roboto-Bold",
-  },
-  welcomeBackground: {
-    width: "100%",
-    height: 180,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-    textAlign: "center",
-    fontFamily: "Roboto-Bold",
-  },
-  subtitleText: {
-    fontSize: 14,
-    color: "white",
-    textAlign: "center",
-    marginTop: 10,
-    fontFamily: "Roboto-Regular",
+    color: "black",
   },
   carouselContainer: {
+    marginTop: 10,
     height: 200,
     width: "100%",
     marginBottom: 20,
@@ -197,7 +232,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   carouselImage: {
-    width: "100%",
+    width: Dimensions.get("window").width - 20,
     height: 200,
     borderRadius: 10,
   },
@@ -209,6 +244,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+  },
+  overlayText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginHorizontal: 10,
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   pagination: {
     bottom: 10,
@@ -230,54 +278,88 @@ const styles = StyleSheet.create({
   featuresContainer: {
     width: "100%",
     paddingHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 80,
   },
   featuresTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 16,
-    fontFamily: "Roboto-Bold",
   },
   featuresScroll: {
     paddingHorizontal: 10,
   },
   featureCard: {
     width: 160,
-    padding: 16,
-    borderRadius: 12,
-    marginRight: 16,
-    alignItems: "center",
+    height: 200,
+    marginRight: 10,
     justifyContent: "center",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  featureImage: {
+    borderRadius: 10,
   },
   featureTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
     color: "white",
-    marginTop: 10,
-    textAlign: "center",
-    fontFamily: "Roboto-Bold",
+    fontSize: 18,
+    fontWeight: "bold",
   },
   featureDescription: {
-    fontSize: 12,
     color: "white",
+    fontSize: 14,
     textAlign: "center",
-    marginTop: 8,
-    fontFamily: "Roboto-Regular",
+    paddingHorizontal: 10,
   },
-  medicineReminderButton: {
+  healthOverviewCard: {
+    backgroundColor: "white",
+    width: "90%",
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    elevation: 4,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 20,
+  },
+  cardContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  cardLabel: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 5,
+  },
+  cardDataWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cardData: {
+    fontSize: 14,
+    color: "#555",
+  },
+  highlight: {
+    fontWeight: "bold",
+    color: "#007bff",
+  },
+  watchImage: {
+    width: 150,  // Adjust width
+    height: 190, // Adjust height to match card height
+    resizeMode: "contain",
+  },
+    medicineReminderButton: {
     position: "absolute",
     bottom: 80,
     right: 20,
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#FF5252",
+    backgroundColor: "lightblue",
     alignItems: "center",
     justifyContent: "center",
     elevation: 4,
@@ -286,6 +368,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
+  // Other styles remain unchanged...
 });
 
 export default HomeScreen;
+
+
+
+
+
+
+
+
+
+
+
+
