@@ -18,10 +18,10 @@ const Footer: React.FC<FooterProps> = ({ navigation, activeScreen }) => {
         <Ionicons name="home" size={30} color={activeScreen === 'HomeScreen' ? 'blue' : 'black'} />
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.iconContainer, activeScreen === 'SettingsScreen' && styles.activeIcon]}
-        onPress={() => navigation.navigate('SettingsScreen')}
+        style={[styles.iconContainer, activeScreen === 'ExerciseScreen' && styles.activeIcon]}
+        onPress={() => navigation.navigate('ExerciseScreen')}
       >
-        <Ionicons name="settings" size={30} color={activeScreen === 'SettingsScreen' ? 'blue' : 'black'} />
+        <Ionicons name="barbell" size={30} color={activeScreen === 'ExerciseScreen' ? 'blue' : 'black'} />
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.iconContainer, activeScreen === 'MonitoringScreen' && styles.activeIcon]}
@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#fff',
-    // paddingVertical: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.2,

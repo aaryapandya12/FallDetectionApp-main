@@ -8,11 +8,11 @@ import * as Progress from 'react-native-progress'; // For progress bar
 type RootStackParamList = {
   MonitoringScreen: undefined;
   HomeScreen: undefined;
-  HeartScreen:undefined;
-  Pressure:undefined;
-  TemperatureScreen:undefined;
-  OxygenScreen:undefined;
-  Footsteps:undefined;
+  HeartScreen: undefined;
+  Pressure: undefined;
+  TemperatureScreen: undefined;
+  OxygenScreen: undefined;
+  Footsteps: undefined;
 };
 
 type MonitoringScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MonitoringScreen'>;
@@ -85,7 +85,7 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
                   progress={heartRate / 120}
                   width={200}
                   height={10}
-                  color="#8971d0"
+                  color="#FF6B6B" // Vibrant red for heart rate
                   style={{ marginTop: 10 }}
                 />
               </View>
@@ -110,7 +110,7 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
                   progress={(bloodPressure.systolic - 90) / 90}
                   width={200}
                   height={10}
-                  color="#35bcbf"
+                  color="#6C5CE7" // Purple for blood pressure
                   style={{ marginTop: 10 }}
                 />
               </View>
@@ -133,7 +133,7 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
                   progress={(temperature - 96) / 5}
                   width={200}
                   height={10}
-                  color="#2772db"
+                  color="#FFA726" // Orange for temperature
                   style={{ marginTop: 10 }}
                 />
               </View>
@@ -145,14 +145,14 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
             <Text style={styles.cardTitle}>Blood Oxygen</Text>
             <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
             <View style={styles.cardContent}>
-              <Ionicons name="water" size={40} color="#2b6cb0" style={styles.icon} />
+              <Ionicons name="water" size={40} color="#00ACC1" style={styles.icon} />
               <View style={styles.cardDetails}>
                 <Text style={styles.cardValue}>{bloodOxygen}%</Text>
                 <Progress.Bar
                   progress={bloodOxygen / 100}
                   width={200}
                   height={10}
-                  color="#00b894"
+                  color="#00ACC1" // Cyan for blood oxygen
                   style={{ marginTop: 10 }}
                 />
               </View>
@@ -164,14 +164,14 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
             <Text style={styles.cardTitle}>Footsteps</Text>
             <Text style={styles.cardSubtitle}>{formatDate(lastUpdated)}</Text>
             <View style={styles.cardContent}>
-              <Ionicons name="footsteps" size={40} color="#2b6cb0" style={styles.icon} />
+              <Ionicons name="footsteps" size={40} color="#4CAF50" style={styles.icon} />
               <View style={styles.cardDetails}>
                 <Text style={styles.cardValue}>{footsteps} steps</Text>
                 <Progress.Bar
                   progress={footsteps / 10000}
                   width={200}
                   height={10}
-                  color="#0092ca"
+                  color="#4CAF50" // Green for footsteps
                   style={{ marginTop: 10 }}
                 />
               </View>
@@ -185,13 +185,13 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
               <Ionicons
                 name="warning"
                 size={40}
-                color={posture === "Unstable" ? "#ff9f1a" : "#38a169"}
+                color={posture === "Unstable" ? "#FF5252" : "#66BB6A"} // Red for unstable, green for stable
                 style={styles.icon}
               />
               <Text
                 style={[
                   styles.cardValue,
-                  { color: posture === "Unstable" ? "#e53e3e" : "#38a169" },
+                  { color: posture === "Unstable" ? "#FF5252" : "#66BB6A" },
                 ]}
               >
                 {posture} (Tilt: 3° forward)
@@ -208,10 +208,10 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
                 size={40}
                 color={
                   fallRisk === "High"
-                    ? "#e53e3e"
+                    ? "#FF5252" // Red for high risk
                     : fallRisk === "Moderate"
-                    ? "#ff9f1a"
-                    : "#38a169"
+                    ? "#FFA726" // Orange for moderate risk
+                    : "#66BB6A" // Green for low risk
                 }
                 style={styles.icon}
               />
@@ -221,10 +221,10 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
                   {
                     color:
                       fallRisk === "High"
-                        ? "#e53e3e"
+                        ? "#FF5252"
                         : fallRisk === "Moderate"
-                        ? "#ff9f1a"
-                        : "#38a169",
+                        ? "#FFA726"
+                        : "#66BB6A",
                   },
                 ]}
               >
@@ -244,7 +244,7 @@ const MonitoringScreen: React.FC<MonitoringScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#F5F7FA', // Light gray background
   },
   scrollableContent: {
     flexGrow: 1,
@@ -254,14 +254,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#2b6cb0', // Example: Vibrant blue
+    color: '#2C3E50', // Dark blue for title
     marginVertical: 10,
     marginBottom: 5,
   },
   subtitle: {
     fontSize: 15,
     textAlign: 'center',
-    color: '#555', // Example: Neutral gray
+    color: '#7F8C8D', // Gray for subtitle
     marginBottom: 5,
     lineHeight: 24,
   },
@@ -270,24 +270,24 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 20,
     marginVertical: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 10,
     width: '90%',
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E0E0E0',
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#444',
+    color: '#2C3E50', // Dark blue for card titles
     marginBottom: 1,
   },
   cardContent: {
@@ -301,11 +301,11 @@ const styles = StyleSheet.create({
   cardValue: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#2b6cb0',
+    color: '#2C3E50', // Dark blue for card values
   },
   cardSubtitle: {
     fontSize: 14,
-    color: '#888',
+    color: '#7F8C8D', // Gray for card subtitles
     marginTop: 3,
     marginBottom: 18,
   },
@@ -316,14 +316,6 @@ const styles = StyleSheet.create({
 });
 
 export default MonitoringScreen;
-
-
-
-
-
-
-
-
 
 
 

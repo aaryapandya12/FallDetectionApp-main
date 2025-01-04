@@ -534,7 +534,7 @@ export default function MedicineReminder() {
               style={styles.modalButton}
               onPress={() => setShowCalendarModal(false)}
             >
-              <Text style={styles.modalButtonText}>Close</Text>
+              <Text style={styles.modalButtonText}>Set</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -567,19 +567,19 @@ export default function MedicineReminder() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F7FA",
-    padding: 5,
+    backgroundColor: "#F7FAFC",
+    padding: 16,
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 24,
   },
   header: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#2C3E50",
+    color: "#2D3748",
   },
   listIcon: {
     padding: 8,
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 2,
+    borderRadius: 12,
     padding: 20,
     marginBottom: 20,
     shadowColor: "#000",
@@ -601,23 +601,23 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#2C3E50",
+    color: "#2D3748",
     marginBottom: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#E0E6ED",
+    borderColor: "#E2E8F0",
     padding: 14,
     marginBottom: 16,
     borderRadius: 8,
     fontSize: 16,
-    backgroundColor: "#F8FAFC",
-    color: "#2C3E50",
+    backgroundColor: "#FFFFFF",
+    color: "#2D3748",
   },
   imageButton: {
-    backgroundColor: "#A5BFCC",
+    backgroundColor: "#4A90E2",
     padding: 14,
-    borderRadius: 18,
+    borderRadius: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
@@ -630,9 +630,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   timeButton: {
-    backgroundColor: "#A5BFCC",
+    backgroundColor: "#4A90E2",
     padding: 14,
-    borderRadius: 18,
+    borderRadius: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
@@ -645,9 +645,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   calendarButton: {
-    backgroundColor: "#A5BFCC",
+    backgroundColor: "#4A90E2",
     padding: 14,
-    borderRadius: 18,
+    borderRadius: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
@@ -660,7 +660,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   primaryButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#48BB78",
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
@@ -692,7 +692,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#2C3E50",
+    color: "#2D3748",
     marginBottom: 12,
   },
   modalText: {
@@ -726,7 +726,7 @@ const styles = StyleSheet.create({
   },
   frequencyLabel: {
     fontSize: 16,
-    color: "#2C3E50",
+    color: "#2D3748",
     marginRight: 10,
   },
   frequencyButton: {

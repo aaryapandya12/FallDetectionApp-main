@@ -45,7 +45,8 @@ const Footsteps: React.FC = () => {
 
   // Sample footsteps data for the graph
   const footstepsData = {
-    labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    // labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
         data: [0, 1000, 2500, 4000, 6000, 8000, 10000], // Example footsteps values
@@ -57,14 +58,7 @@ const Footsteps: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#4A90E2" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Footsteps Monitor</Text>
-        <View style={{ width: 24 }} /> {/* Placeholder for alignment */}
-      </View>
+   
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -76,39 +70,12 @@ const Footsteps: React.FC = () => {
           <Text style={styles.footstepsLabel}>Current Footsteps</Text>
         </View>
 
-        {/* Daily Goal Progress */}
-        <View style={styles.card}>
-          <Text style={styles.title}>Daily Goal Progress</Text>
-          <Progress.Bar
-            progress={footsteps / dailyGoal}
-            width={Dimensions.get('window').width - 80}
-            height={10}
-            color="#4A90E2"
-            unfilledColor="#E0E0E0"
-            borderWidth={0}
-            borderRadius={8}
-          />
-          <Text style={styles.progressText}>
-            {footsteps} / {dailyGoal} steps
-          </Text>
-        </View>
-
-        {/* Start/Stop Monitoring Button */}
-        <TouchableOpacity
-          style={[styles.monitorButton, isMonitoring && styles.stopButton]}
-          onPress={() => setIsMonitoring(!isMonitoring)}
-        >
-          <Text style={styles.monitorButtonText}>
-            {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Historical Trends */}
-        <View style={styles.card}>
+          {/* Historical Trends */}
+          <View style={styles.card}>
           <Text style={styles.title}>Historical Trends</Text>
           <LineChart
             data={footstepsData}
-            width={Dimensions.get('window').width - 40} // Chart width
+            width={Dimensions.get('window').width - 60} // Chart width
             height={220} // Chart height
             yAxisLabel=""
             yAxisSuffix=" steps"
@@ -133,18 +100,51 @@ const Footsteps: React.FC = () => {
           />
         </View>
 
+        {/* Daily Goal Progress */}
+        <View style={styles.card}>
+          <Text style={styles.title}>Daily Goal Progress</Text>
+          <Progress.Bar
+            progress={footsteps / dailyGoal}
+            width={Dimensions.get('window').width - 80}
+            height={10}
+            color="#4A90E2"
+            unfilledColor="#E0E0E0"
+            borderWidth={0}
+            borderRadius={8}
+          />
+          <Text style={styles.progressText}>
+            {footsteps} / {dailyGoal} steps
+          </Text>
+        </View>
+
+        {/* Start/Stop Monitoring Button */}
+        <TouchableOpacity
+          style={[styles.monitorButton, isMonitoring && styles.stopButton]}
+          onPress={() => setIsMonitoring(!isMonitoring)}
+        >
+          <Ionicons name={isMonitoring ? 'stop' : 'play'} size={24} color="#fff" />
+          <Text style={styles.monitorButtonText}>
+            {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
+          </Text>
+        </TouchableOpacity>
+
+      
+
         {/* Health Tips */}
         <View style={styles.card}>
           <Text style={styles.title}>Health Tips</Text>
-          <Text style={styles.tipText}>
-            • Aim for at least 10,000 steps per day to maintain a healthy lifestyle.
-          </Text>
-          <Text style={styles.tipText}>
-            • Walking regularly can improve cardiovascular health and reduce stress.
-          </Text>
-          <Text style={styles.tipText}>
-            • Use a pedometer or fitness tracker to monitor your daily steps.
-          </Text>
+          <View style={styles.tipContainer}>
+            <Ionicons name="walk" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Aim for at least 10,000 steps per day to maintain a healthy lifestyle.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="heart" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Walking regularly can improve cardiovascular health and reduce stress.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="fitness" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Use a pedometer or fitness tracker to monitor your daily steps.</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   scrollContent: {
     padding: 20,
@@ -184,10 +185,12 @@ const styles = StyleSheet.create({
     fontSize: 64,
     fontWeight: '600',
     color: '#4A90E2', // Blue
+    fontFamily: 'Roboto', // Use a modern font
   },
   footstepsLabel: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   monitorButton: {
     backgroundColor: '#4A90E2', // Blue
@@ -195,6 +198,8 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   stopButton: {
     backgroundColor: '#E74C3C', // Red
@@ -203,6 +208,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#fff',
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   card: {
     backgroundColor: '#fff',
@@ -220,17 +227,25 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
     marginBottom: 16,
+    fontFamily: 'Roboto', // Use a modern font
   },
   progressText: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
     marginTop: 8,
     textAlign: 'center',
+    fontFamily: 'Roboto', // Use a modern font
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   tipText: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
-    marginBottom: 8,
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   chart: {
     borderRadius: 16,

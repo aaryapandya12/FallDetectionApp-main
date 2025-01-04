@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ImageBackground,
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Footer from "./Footer";
@@ -17,13 +18,17 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type RootStackParamList = {
   HomeScreen: undefined;
   PersonalDetail: undefined;
-  MedicineReminder:undefined;
+  MedicineReminder: undefined;
+  SettingsScreen: undefined;
+  MyProfileScreen: undefined;
+  MonitoringScreen: undefined; // Add this line
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMenuVisible, setMenuVisible] = useState(false);
 
   const carouselImages = [
     require("../../assets/image1.jpg"),
@@ -39,6 +44,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       title: "Health Monitoring",
       description: "Track heart rate, oxygen levels, and activity in real-time.",
       background: require("../../assets/heart2.jpg"),
+      onPress: () => navigation.navigate("MonitoringScreen"), // Add navigation
     },
     {
       id: 2,
@@ -46,6 +52,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       title: "Fall Detection",
       description: "Automatically detect falls and send alerts to caregivers.",
       background: require("../../assets/fall.jpg"),
+      onPress: () => {}, // Add navigation if needed
     },
     {
       id: 3,
@@ -54,6 +61,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       description:
         "Quickly connect with family or nearby hospitals in emergencies.",
       background: require("../../assets/emg3.jpg"),
+      onPress: () => {}, // Add navigation if needed
     },
     {
       id: 4,
@@ -62,18 +70,75 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       description:
         "Locate the user in case of an emergency for faster assistance.",
       background: require("../../assets/gps.jpg"),
+      onPress: () => {}, // Add navigation if needed
+    },
+    {
+      id: 5,
+      icon: "medkit", // Updated icon for Medicine Reminder
+      title: "Medicine Reminder",
+      description: "Set reminders for your medications and stay on track.",
+      background: require("../../assets/gps.jpg"), // Add a relevant image
+      onPress: () => navigation.navigate("MedicineReminder"), // Add navigation
     },
   ];
+
+  const toggleMenu = () => {
+    setMenuVisible(!isMenuVisible);
+  };
+
+  const closeMenu = () => {
+    setMenuVisible(false);
+  };
 
   return (
     <View style={styles.container}>
       {/* Navigation Bar */}
       <View style={styles.navbar}>
         <Text style={styles.navText}>Home</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("PersonalDetail")}>
-          <Ionicons name="person-circle" size={40} color="black" />
+        <TouchableOpacity onPress={toggleMenu}>
+          <Ionicons name="ellipsis-vertical" size={32} color="black" />
         </TouchableOpacity>
       </View>
+
+      {/* Menu Modal */}
+      <Modal
+        transparent={true}
+        visible={isMenuVisible}
+        animationType="fade"
+        onRequestClose={closeMenu}
+      >
+        <TouchableOpacity
+          style={styles.menuOverlay}
+          activeOpacity={1}
+          onPress={closeMenu}
+        >
+          <View style={styles.menuContainer}>
+            {/* Profile Details Option */}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                closeMenu();
+                navigation.navigate("MyProfileScreen");
+              }}
+            >
+              <Ionicons name="person" size={24} color="black" />
+              <Text style={styles.menuText}>Profile Details</Text>
+            </TouchableOpacity>
+
+            {/* Settings Option */}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                closeMenu();
+                navigation.navigate("SettingsScreen");
+              }}
+            >
+              <Ionicons name="settings" size={24} color="black" />
+              <Text style={styles.menuText}>Settings</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       {/* Main Content */}
       <ScrollView contentContainerStyle={styles.scrollableContent}>
@@ -114,7 +179,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         {/* Health Overview Card */}
-        <View style={styles.healthOverviewCard}>
+        <View style={styles.healthOverviewCard} >
           <Text style={styles.cardTitle}>Health Overview</Text>
           <View style={styles.cardContent}>
             <View>
@@ -145,7 +210,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Image of the Watch */}
             <Image
-              source={require("../../assets/watch.jpg")} // Add the correct path for the watch image
+              source={require("../../assets/watch.jpg")}
               style={styles.watchImage}
             />
           </View>
@@ -160,30 +225,27 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             contentContainerStyle={styles.featuresScroll}
           >
             {keyFeatures.map((feature) => (
-              <ImageBackground
+              <TouchableOpacity
                 key={feature.id}
-                source={feature.background}
-                style={styles.featureCard}
-                imageStyle={styles.featureImage}
-                blurRadius={4}
+                onPress={feature.onPress} // Add onPress handler
               >
-                <Ionicons name={feature.icon as any} size={32} color="white" />
-                <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureDescription}>
-                  {feature.description}
-                </Text>
-              </ImageBackground>
+                <ImageBackground
+                  source={feature.background}
+                  style={styles.featureCard}
+                  imageStyle={styles.featureImage}
+                  blurRadius={4}
+                >
+                  <Ionicons name={feature.icon as any} size={32} color="white" />
+                  <Text style={styles.featureTitle}>{feature.title}</Text>
+                  <Text style={styles.featureDescription}>
+                    {feature.description}
+                  </Text>
+                </ImageBackground>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
       </ScrollView>
-
-      <TouchableOpacity
-        style={styles.medicineReminderButton}
-        onPress={() => navigation.navigate("MedicineReminder")}
-      >
-        <Ionicons name="medkit" size={28} color="white" />
-      </TouchableOpacity>
 
       {/* Footer */}
       <Footer navigation={navigation} activeScreen="HomeScreen" />
@@ -348,39 +410,38 @@ const styles = StyleSheet.create({
     color: "#007bff",
   },
   watchImage: {
-    width: 150,  // Adjust width
-    height: 190, // Adjust height to match card height
+    width: 150,
+    height: 190,
     resizeMode: "contain",
   },
-    medicineReminderButton: {
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  menuContainer: {
     position: "absolute",
-    bottom: 80,
-    right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "lightblue",
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 4,
+    top: 60,
+    right: 16,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 16,
+    elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
-  // Other styles remain unchanged...
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+  menuText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginLeft: 16,
+  },
 });
 
 export default HomeScreen;
-
-
-
-
-
-
-
-
-
-
-
-

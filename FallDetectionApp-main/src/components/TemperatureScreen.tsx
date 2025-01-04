@@ -43,7 +43,8 @@ const TemperatureScreen: React.FC = () => {
 
   // Sample temperature data for the graph
   const temperatureData = {
-    labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    // labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
         data: [98.6, 98.7, 98.5, 98.8, 99.0, 98.9, 98.7], // Example temperature values
@@ -55,14 +56,6 @@ const TemperatureScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#4A90E2" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Temperature Monitor</Text>
-        <View style={{ width: 24 }} /> {/* Placeholder for alignment */}
-      </View>
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -79,36 +72,19 @@ const TemperatureScreen: React.FC = () => {
           style={[styles.monitorButton, isMonitoring && styles.stopButton]}
           onPress={() => setIsMonitoring(!isMonitoring)}
         >
+          <Ionicons name={isMonitoring ? 'stop' : 'play'} size={24} color="#fff" />
           <Text style={styles.monitorButtonText}>
             {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
           </Text>
         </TouchableOpacity>
 
-        {/* Temperature Ranges */}
-        <View style={styles.card}>
-          <Text style={styles.title}>Temperature Ranges</Text>
-          <View style={styles.rangesContainer}>
-            <View style={[styles.range, { backgroundColor: '#E8F5E9' }]}>
-              <Text style={styles.rangeLabel}>Normal</Text>
-              <Text style={styles.rangeValue}>97°F - 99°F</Text>
-            </View>
-            <View style={[styles.range, { backgroundColor: '#FFF3E0' }]}>
-              <Text style={styles.rangeLabel}>Fever</Text>
-              <Text style={styles.rangeValue}>≥ 100.4°F</Text>
-            </View>
-            <View style={[styles.range, { backgroundColor: '#FFEBEE' }]}>
-              <Text style={styles.rangeLabel}>Hypothermia</Text>
-              <Text style={styles.rangeValue}>≤ 95°F</Text>
-            </View>
-          </View>
-        </View>
 
-        {/* Historical Trends */}
-        <View style={styles.card}>
+          {/* Historical Trends */}
+          <View style={styles.card}>
           <Text style={styles.title}>Historical Trends</Text>
           <LineChart
             data={temperatureData}
-            width={Dimensions.get('window').width - 40} // Chart width
+            width={Dimensions.get('window').width - 60} // Chart width
             height={220} // Chart height
             yAxisLabel=""
             yAxisSuffix="°F"
@@ -133,18 +109,45 @@ const TemperatureScreen: React.FC = () => {
           />
         </View>
 
+        {/* Temperature Ranges */}
+        <View style={styles.card}>
+          <Text style={styles.title}>Temperature Ranges</Text>
+          <View style={styles.rangesContainer}>
+            <View style={[styles.range, { backgroundColor: '#E8F5E9' }]}>
+              <Ionicons name="thermometer" size={24} color="#2C3E50" />
+              <Text style={styles.rangeLabel}>Normal</Text>
+              <Text style={styles.rangeValue}>97°F - 99°F</Text>
+            </View>
+            <View style={[styles.range, { backgroundColor: '#FFF3E0' }]}>
+              <Ionicons name="warning" size={24} color="#2C3E50" />
+              <Text style={styles.rangeLabel}>Fever</Text>
+              <Text style={styles.rangeValue}>≥ 100.4°F</Text>
+            </View>
+            <View style={[styles.range, { backgroundColor: '#FFEBEE' }]}>
+              <Ionicons name="snow" size={24} color="#2C3E50" />
+              <Text style={styles.rangeLabel}>Hypothermia</Text>
+              <Text style={styles.rangeValue}>≤ 95°F</Text>
+            </View>
+          </View>
+        </View>
+
+      
+
         {/* Health Tips */}
         <View style={styles.card}>
           <Text style={styles.title}>Health Tips</Text>
-          <Text style={styles.tipText}>
-            • A normal body temperature is typically around 98.6°F (37°C).
-          </Text>
-          <Text style={styles.tipText}>
-            • If your temperature is above 100.4°F, you may have a fever. Rest and stay hydrated.
-          </Text>
-          <Text style={styles.tipText}>
-            • If your temperature is below 95°F, seek medical attention as it may indicate hypothermia.
-          </Text>
+          <View style={styles.tipContainer}>
+            <Ionicons name="thermometer" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>A normal body temperature is typically around 98.6°F (37°C).</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="warning" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>If your temperature is above 100.4°F, you may have a fever. Rest and stay hydrated.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="snow" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>If your temperature is below 95°F, seek medical attention as it may indicate hypothermia.</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -172,6 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   scrollContent: {
     padding: 20,
@@ -184,10 +188,12 @@ const styles = StyleSheet.create({
     fontSize: 64,
     fontWeight: '600',
     color: '#4A90E2', // Blue
+    fontFamily: 'Roboto', // Use a modern font
   },
   temperatureLabel: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   monitorButton: {
     backgroundColor: '#4A90E2', // Blue
@@ -195,6 +201,8 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   stopButton: {
     backgroundColor: '#E74C3C', // Red
@@ -203,6 +211,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#fff',
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   card: {
     backgroundColor: '#fff',
@@ -220,6 +230,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
     marginBottom: 16,
+    fontFamily: 'Roboto', // Use a modern font
   },
   rangesContainer: {
     flexDirection: 'row',
@@ -237,15 +248,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
+    marginTop: 8,
   },
   rangeValue: {
     fontSize: 14,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   tipText: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
-    marginBottom: 8,
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   chart: {
     borderRadius: 16,

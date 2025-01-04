@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -19,8 +19,8 @@ import Pressure from "../components/Pressure";
 import TemperatureScreen from "../components/TemperatureScreen";
 import OxygenScreen from "../components/OxygenScreen";
 import Footsteps from "../components/Footsteps";
-// import { startBackgroundAudio } from "../components/backgroundAudio";
-// import { setupPlayer } from '../components/setupPlayer';
+import MyProfileScreen from "../components/MyProfileScreen";
+import ExerciseScreen from "../components/ExerciseScreen"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -30,11 +30,22 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// Define the UserData type
+export type UserData = {
+  name: string;
+  age: string;
+  height: string;
+  weight: string;
+  emergencyContact1: string;
+  emergencyContact2: string;
+};
+
 // Define the parameter list for the screens
 export type RootStackParamList = {
   Register: undefined;
   PersonalDetail: undefined;
   HomeScreen: undefined;
+  // HomeScreen: { userData: UserData };
   SettingsScreen: undefined;
   MonitoringScreen: undefined;
   NotificationsScreen: undefined;
@@ -47,6 +58,8 @@ export type RootStackParamList = {
   TemperatureScreen: undefined;
   OxygenScreen: undefined;
   Footsteps: undefined;
+  MyProfileScreen: { userData: UserData }; // Add userData parameter for MyProfileScreen
+  ExerciseScreen:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -85,12 +98,36 @@ const AppNavigator: React.FC = () => {
           component={MonitoringScreen}
           options={{ title: "Monitoring" }}
         />
+        <Stack.Screen
+          name="MyProfileScreen"
+          component={MyProfileScreen}
+          options={{ title: "My Profile" }} // Add a title for MyProfileScreen
+        />
+        <Stack.Screen
+          name="HeartScreen"
+          component={HeartScreen}
+        />
 
-        <Stack.Screen name="HeartScreen" component={HeartScreen} />
-        <Stack.Screen name="Pressure" component={Pressure} />
-        <Stack.Screen name="TemperatureScreen" component={TemperatureScreen} />
-        <Stack.Screen name="OxygenScreen" component={OxygenScreen} />
-        <Stack.Screen name="Footsteps" component={Footsteps} />
+<Stack.Screen
+          name="ExerciseScreen"
+          component={ExerciseScreen}
+        />
+        <Stack.Screen
+          name="Pressure"
+          component={Pressure}
+        />
+        <Stack.Screen
+          name="TemperatureScreen"
+          component={TemperatureScreen}
+        />
+        <Stack.Screen
+          name="OxygenScreen"
+          component={OxygenScreen}
+        />
+        <Stack.Screen
+          name="Footsteps"
+          component={Footsteps}
+        />
         <Stack.Screen
           name="NotificationsScreen"
           component={NotificationsScreen}

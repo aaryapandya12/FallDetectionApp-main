@@ -43,7 +43,8 @@ const OxygenScreen: React.FC = () => {
 
   // Sample blood oxygen data for the graph
   const bloodOxygenData = {
-    labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    // labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
         data: [97, 96, 98, 97, 99, 98, 97], // Example blood oxygen values
@@ -55,14 +56,6 @@ const OxygenScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#4A90E2" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Blood Oxygen Monitor</Text>
-        <View style={{ width: 24 }} /> {/* Placeholder for alignment */}
-      </View>
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -79,36 +72,18 @@ const OxygenScreen: React.FC = () => {
           style={[styles.monitorButton, isMonitoring && styles.stopButton]}
           onPress={() => setIsMonitoring(!isMonitoring)}
         >
+          <Ionicons name={isMonitoring ? 'stop' : 'play'} size={24} color="#fff" />
           <Text style={styles.monitorButtonText}>
             {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
           </Text>
         </TouchableOpacity>
 
-        {/* Oxygen Level Ranges */}
-        <View style={styles.card}>
-          <Text style={styles.title}>Oxygen Level Ranges</Text>
-          <View style={styles.rangesContainer}>
-            <View style={[styles.range, { backgroundColor: '#E8F5E9' }]}>
-              <Text style={styles.rangeLabel}>Normal</Text>
-              <Text style={styles.rangeValue}>95% - 100%</Text>
-            </View>
-            <View style={[styles.range, { backgroundColor: '#FFF3E0' }]}>
-              <Text style={styles.rangeLabel}>Low</Text>
-              <Text style={styles.rangeValue}>90% - 94%</Text>
-            </View>
-            <View style={[styles.range, { backgroundColor: '#FFEBEE' }]}>
-              <Text style={styles.rangeLabel}>Critical</Text>
-              <Text style={styles.rangeValue}>≤ 89%</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Historical Trends */}
-        <View style={styles.card}>
+         {/* Historical Trends */}
+         <View style={styles.card}>
           <Text style={styles.title}>Historical Trends</Text>
           <LineChart
             data={bloodOxygenData}
-            width={Dimensions.get('window').width - 40} // Chart width
+            width={Dimensions.get('window').width - 60} // Chart width
             height={220} // Chart height
             yAxisLabel=""
             yAxisSuffix="%"
@@ -133,18 +108,45 @@ const OxygenScreen: React.FC = () => {
           />
         </View>
 
+        {/* Oxygen Level Ranges */}
+        <View style={styles.card}>
+          <Text style={styles.title}>Oxygen Level Ranges</Text>
+          <View style={styles.rangesContainer}>
+            <View style={[styles.range, { backgroundColor: '#E8F5E9' }]}>
+              <Ionicons name="heart" size={24} color="#2C3E50" />
+              <Text style={styles.rangeLabel}>Normal</Text>
+              <Text style={styles.rangeValue}>95% - 100%</Text>
+            </View>
+            <View style={[styles.range, { backgroundColor: '#FFF3E0' }]}>
+              <Ionicons name="alert" size={24} color="#2C3E50" />
+              <Text style={styles.rangeLabel}>Low</Text>
+              <Text style={styles.rangeValue}>90% - 94%</Text>
+            </View>
+            <View style={[styles.range, { backgroundColor: '#FFEBEE' }]}>
+              <Ionicons name="warning" size={24} color="#2C3E50" />
+              <Text style={styles.rangeLabel}>Critical</Text>
+              <Text style={styles.rangeValue}>≤ 89%</Text>
+            </View>
+          </View>
+        </View>
+
+       
+
         {/* Health Tips */}
         <View style={styles.card}>
           <Text style={styles.title}>Health Tips</Text>
-          <Text style={styles.tipText}>
-            • A normal blood oxygen level is typically between 95% and 100%.
-          </Text>
-          <Text style={styles.tipText}>
-            • If your blood oxygen level is below 90%, seek medical attention immediately.
-          </Text>
-          <Text style={styles.tipText}>
-            • Practice deep breathing exercises to improve oxygen levels.
-          </Text>
+          <View style={styles.tipContainer}>
+            <Ionicons name="heart" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>A normal blood oxygen level is typically between 95% and 100%.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="alert" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>If your blood oxygen level is below 90%, seek medical attention immediately.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="leaf" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Practice deep breathing exercises to improve oxygen levels.</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -172,6 +174,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   scrollContent: {
     padding: 20,
@@ -184,10 +187,12 @@ const styles = StyleSheet.create({
     fontSize: 64,
     fontWeight: '600',
     color: '#4A90E2', // Blue
+    fontFamily: 'Roboto', // Use a modern font
   },
   oxygenLabel: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   monitorButton: {
     backgroundColor: '#4A90E2', // Blue
@@ -195,6 +200,8 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   stopButton: {
     backgroundColor: '#E74C3C', // Red
@@ -203,6 +210,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#fff',
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   card: {
     backgroundColor: '#fff',
@@ -220,6 +229,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
     marginBottom: 16,
+    fontFamily: 'Roboto', // Use a modern font
   },
   rangesContainer: {
     flexDirection: 'row',
@@ -237,15 +247,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
+    marginTop: 8,
   },
   rangeValue: {
     fontSize: 14,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   tipText: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
-    marginBottom: 8,
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   chart: {
     borderRadius: 16,

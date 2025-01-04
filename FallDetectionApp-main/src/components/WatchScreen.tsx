@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient"; // For gradient background
 
 const WatchScreen: React.FC = () => {
   // Mock data for smartwatch features
@@ -24,11 +25,17 @@ const WatchScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Ionicons name="watch" size={50} color="#2196F3" />
+      {/* Updated Smartwatch Connected Header */}
+      <LinearGradient
+        colors={["#2196F3", "#1976D2"]} // Gradient colors
+        style={styles.header}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Ionicons name="watch" size={50} color="#FFF" />
         <Text style={styles.title}>Smartwatch Connected</Text>
         <Text style={styles.subtitle}>Real-time health and activity monitoring</Text>
-      </View>
+      </LinearGradient>
 
       {/* Activity Tracking */}
       <Text style={styles.sectionTitle}>Activity Tracking</Text>
@@ -106,18 +113,27 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: "center",
-    marginVertical: 32,
+    paddingVertical: 32,
+    borderRadius: 16,
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    color: "#333",
+    color: "#FFF",
     marginTop: 16,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: "#FFF",
     textAlign: "center",
+    marginTop: 8,
+    opacity: 0.9,
   },
   sectionTitle: {
     fontSize: 20,

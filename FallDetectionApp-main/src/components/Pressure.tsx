@@ -46,7 +46,8 @@ const Pressure: React.FC = () => {
 
   // Sample blood pressure data for the graph
   const bloodPressureData = {
-    labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    // labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
         data: [120, 125, 130, 128, 135, 132, 130], // Example systolic values
@@ -58,14 +59,6 @@ const Pressure: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#4A90E2" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Blood Pressure Monitor</Text>
-        <View style={{ width: 24 }} /> {/* Placeholder for alignment */}
-      </View>
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -82,37 +75,19 @@ const Pressure: React.FC = () => {
           style={[styles.monitorButton, isMonitoring && styles.stopButton]}
           onPress={() => setIsMonitoring(!isMonitoring)}
         >
+          <Ionicons name={isMonitoring ? 'stop' : 'play'} size={24} color="#fff" />
           <Text style={styles.monitorButtonText}>
             {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
           </Text>
         </TouchableOpacity>
 
-        {/* Blood Pressure Categories */}
-        <View style={styles.card}>
-          <Text style={styles.title}>Blood Pressure Categories</Text>
-          <View style={styles.categoriesContainer}>
-            <View style={[styles.category, { backgroundColor: '#E8F5E9' }]}>
-              <Text style={styles.categoryLabel}>Normal</Text>
-              <Text style={styles.categoryValue}>≤ 120/80 mmHg</Text>
-            </View>
-            <View style={[styles.category, { backgroundColor: '#FFF3E0' }]}>
-              <Text style={styles.categoryLabel}>Elevated</Text>
-              <Text style={styles.categoryValue}>120-129/80 mmHg</Text>
-            </View>
-            <View style={[styles.category, { backgroundColor: '#FFEBEE' }]}>
-              <Text style={styles.categoryLabel}>Hypertension</Text>
-              <Text style={styles.categoryValue}>≥ 130/80 mmHg</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Historical Trends */}
-        <View style={styles.card}>
+         {/* Historical Trends */}
+         <View style={styles.card}>
           <Text style={styles.title}>Historical Trends</Text>
           <LineChart
             data={bloodPressureData}
-            width={Dimensions.get('window').width - 40} // Chart width
-            height={220} // Chart height
+            width={Dimensions.get('window').width - 60} // Chart width
+            height={230} // Chart height
             yAxisLabel=""
             yAxisSuffix=" mmHg"
             chartConfig={{
@@ -136,18 +111,45 @@ const Pressure: React.FC = () => {
           />
         </View>
 
+
+        {/* Blood Pressure Categories */}
+        <View style={styles.card}>
+          <Text style={styles.title}>Blood Pressure Categories</Text>
+          <View style={styles.categoriesContainer}>
+            <View style={[styles.category, { backgroundColor: '#E8F5E9' }]}>
+              <Ionicons name="heart" size={24} color="#2C3E50" />
+              <Text style={styles.categoryLabel}>Normal</Text>
+              <Text style={styles.categoryValue}>≤ 120/80 mmHg</Text>
+            </View>
+            <View style={[styles.category, { backgroundColor: '#FFF3E0' }]}>
+              <Ionicons name="alert" size={24} color="#2C3E50" />
+              <Text style={styles.categoryLabel}>Elevated</Text>
+              <Text style={styles.categoryValue}>120-129/80 mmHg</Text>
+            </View>
+            <View style={[styles.category, { backgroundColor: '#FFEBEE' }]}>
+              <Ionicons name="warning" size={24} color="#2C3E50" />
+              <Text style={styles.categoryLabel}>Hypertension</Text>
+              <Text style={styles.categoryValue}>≥ 130/80 mmHg</Text>
+            </View>
+          </View>
+        </View>
+
+      
         {/* Health Tips */}
         <View style={styles.card}>
           <Text style={styles.title}>Health Tips</Text>
-          <Text style={styles.tipText}>
-            • Maintain a healthy diet low in sodium and high in fruits and vegetables.
-          </Text>
-          <Text style={styles.tipText}>
-            • Regular physical activity can help lower blood pressure.
-          </Text>
-          <Text style={styles.tipText}>
-            • Monitor your blood pressure regularly and consult a doctor if it's consistently high.
-          </Text>
+          <View style={styles.tipContainer}>
+            <Ionicons name="nutrition" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Maintain a healthy diet low in sodium and high in fruits and vegetables.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="walk" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Regular physical activity can help lower blood pressure.</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <Ionicons name="medkit" size={20} color="#4A90E2" />
+            <Text style={styles.tipText}>Monitor your blood pressure regularly and consult a doctor if it's consistently high.</Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -175,6 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   scrollContent: {
     padding: 20,
@@ -187,10 +190,12 @@ const styles = StyleSheet.create({
     fontSize: 64,
     fontWeight: '600',
     color: '#4A90E2', // Blue
+    fontFamily: 'Roboto', // Use a modern font
   },
   bloodPressureLabel: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
   },
   monitorButton: {
     backgroundColor: '#4A90E2', // Blue
@@ -198,6 +203,8 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   stopButton: {
     backgroundColor: '#E74C3C', // Red
@@ -206,6 +213,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#fff',
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   card: {
     backgroundColor: '#fff',
@@ -223,6 +232,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
     marginBottom: 16,
+    fontFamily: 'Roboto', // Use a modern font
   },
   categoriesContainer: {
     flexDirection: 'row',
@@ -240,15 +250,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#2C3E50', // Dark gray
+    fontFamily: 'Roboto', // Use a modern font
+    marginTop: 8,
   },
   categoryValue: {
     fontSize: 14,
     color: '#7F8C8D', // Gray
+    fontFamily: 'Roboto', // Use a modern font
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   tipText: {
     fontSize: 16,
     color: '#7F8C8D', // Gray
-    marginBottom: 8,
+    marginLeft: 10,
+    fontFamily: 'Roboto', // Use a modern font
   },
   chart: {
     borderRadius: 16,

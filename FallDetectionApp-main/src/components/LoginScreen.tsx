@@ -20,32 +20,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // const handleLogin = async () => {
-  //   if (!username || !password) {
-  //     Alert.alert('Incomplete Fields', 'Please fill in all fields');
-  //     return;
-  //   }
-
-  //   try {
-  //     // Fetch stored user data from AsyncStorage
-  //     const storedData = await AsyncStorage.getItem('userData');
-  //     if (storedData) {
-  //       const userData = JSON.parse(storedData);
-
-  //       // Validate username and password
-  //       if (username === userData.username && password === userData.password) {
-  //         Alert.alert('Login Successful', 'You have logged in successfully!');
-  //         navigation.navigate('HomeScreen');
-  //       } else {
-  //         Alert.alert('Login Failed', 'Invalid username or password');
-  //       }
-  //     } else {
-  //       Alert.alert('Login Failed', 'No registered user found');
-  //     }
-  //   } catch (error) {
-  //     Alert.alert('Error', 'An error occurred while logging in');
-  //   }
-  // };
 
   const handleLogin = async () => {
     if (!username || !password) {
