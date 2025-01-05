@@ -5,20 +5,13 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import Footer from "./Footer"; // Importing Footer
 
-const NotificationsScreen: React.FC = () => {
+const NotificationsScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
-    <LinearGradient
-      colors={["#f0f4ff", "#d6e3ff"]} // Soft gradient background
-      style={styles.container}
-    >
-      
-
+    <View style={styles.container}>
       {/* Content */}
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.subtitle}>Recent Notifications</Text>
@@ -62,14 +55,15 @@ const NotificationsScreen: React.FC = () => {
       </ScrollView>
 
       {/* Footer */}
-      {/* <Footer activeScreen="NotificationsScreen" navigation={navigation} /> */}
-    </LinearGradient>
+      <Footer navigation={navigation} activeScreen="NotificationsScreen" />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f9f9f9", // Light background color
   },
   header: {
     flexDirection: "row",
@@ -86,6 +80,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   content: {
+    flexGrow: 1,
     padding: 16,
   },
   subtitle: {

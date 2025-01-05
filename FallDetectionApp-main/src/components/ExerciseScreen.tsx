@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as Progress from 'react-native-progress';
+import Footer from './Footer'; // Import the Footer component
 
-const ExerciseUI: React.FC = () => {
+const ExerciseUI: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [currentExercise, setCurrentExercise] = useState<string>('Stretching');
   const [timer, setTimer] = useState<number>(0);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
@@ -107,95 +108,100 @@ const ExerciseUI: React.FC = () => {
   const randomProgress = Math.random() * 0.8 + 0.1; // Random value between 0.1 and 0.9
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* <Text style={styles.title}>Senior Fitness App</Text> */}
-      <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Choose an Exercise:</Text>
-        <Picker
-          selectedValue={currentExercise}
-          onValueChange={(itemValue) => handleExerciseChange(itemValue as string)}
-          style={styles.picker}
-        >
-          {exercises.map((exercise) => (
-            <Picker.Item key={exercise.name} label={exercise.name} value={exercise.name} />
-          ))}
-        </Picker>
-      </View>
-      <View style={styles.videoPlaceholder}>
-        <Text style={styles.placeholderText}>Video will appear here</Text>
-      </View>
-      <View style={styles.timerContainer}>
-        <Text style={styles.timerText}>{formatTime(timer)}</Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, isTimerRunning && styles.disabledButton]}
-          onPress={startTimer}
-          disabled={isTimerRunning}
-        >
-          <Text style={styles.buttonText}>Start</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, !isTimerRunning && styles.disabledButton]}
-          onPress={stopTimer}
-          disabled={!isTimerRunning}
-        >
-          <Text style={styles.buttonText}>Stop</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.resetButton]}
-          onPress={resetTimer}
-        >
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.instructionsContainer}>
-        <Text style={styles.instructionsTitle}>Instructions:</Text>
-        <Text style={styles.instructionsText}>
-          {currentExercise === 'Stretching'
-            ? 'Gently stretch your arms and legs. Hold each stretch for 20 seconds.'
-            : currentExercise === 'Meditation'
-            ? 'Sit comfortably, close your eyes, and focus on your breathing for 10 minutes.'
-            : 'Perform gentle yoga poses for 15 minutes. Focus on your breath and posture.'}
-        </Text>
-      </View>
-      <View style={styles.progressContainer}>
-        <Text style={styles.label}>Progress Chart</Text>
-        <Picker
-          selectedValue={selectedPeriod}
-          onValueChange={(itemValue) => setSelectedPeriod(itemValue as 'daily' | 'weekly' | 'monthly')}
-          style={styles.picker}
-        >
-          <Picker.Item label="Daily" value="daily" />
-          <Picker.Item label="Weekly" value="weekly" />
-          <Picker.Item label="Monthly" value="monthly" />
-        </Picker>
-        <Text style={styles.progressText}>
-          Total Exercise Time ({selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)}):{' '}
-          {formatTime(getTotalDuration(selectedPeriod))}
-        </Text>
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartLabel}>Exercise Progress</Text>
-          <Progress.Bar
-            progress={randomProgress}
-            width={300}
-            height={15}
-            color="#007bff"
-            borderRadius={10}
-          />
-          <Text style={styles.chartPercentage}>{(randomProgress * 100).toFixed(1)}%</Text>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.pickerContainer}>
+          <Text style={styles.label}>Choose an Exercise:</Text>
+          <Picker
+            selectedValue={currentExercise}
+            onValueChange={(itemValue) => handleExerciseChange(itemValue as string)}
+            style={styles.picker}
+          >
+            {exercises.map((exercise) => (
+              <Picker.Item key={exercise.name} label={exercise.name} value={exercise.name} />
+            ))}
+          </Picker>
         </View>
-      </View>
-    </ScrollView>
+        <View style={styles.videoPlaceholder}>
+          <Text style={styles.placeholderText}>Video will appear here</Text>
+        </View>
+        <View style={styles.timerContainer}>
+          <Text style={styles.timerText}>{formatTime(timer)}</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, isTimerRunning && styles.disabledButton]}
+            onPress={startTimer}
+            disabled={isTimerRunning}
+          >
+            <Text style={styles.buttonText}>Start</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, !isTimerRunning && styles.disabledButton]}
+            onPress={stopTimer}
+            disabled={!isTimerRunning}
+          >
+            <Text style={styles.buttonText}>Stop</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.resetButton]}
+            onPress={resetTimer}
+          >
+            <Text style={styles.buttonText}>Reset</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>Instructions:</Text>
+          <Text style={styles.instructionsText}>
+            {currentExercise === 'Stretching'
+              ? 'Gently stretch your arms and legs. Hold each stretch for 20 seconds.'
+              : currentExercise === 'Meditation'
+              ? 'Sit comfortably, close your eyes, and focus on your breathing for 10 minutes.'
+              : 'Perform gentle yoga poses for 15 minutes. Focus on your breath and posture.'}
+          </Text>
+        </View>
+        <View style={styles.progressContainer}>
+          <Text style={styles.label}>Progress Chart</Text>
+          <Picker
+            selectedValue={selectedPeriod}
+            onValueChange={(itemValue) => setSelectedPeriod(itemValue as 'daily' | 'weekly' | 'monthly')}
+            style={styles.picker}
+          >
+            <Picker.Item label="Daily" value="daily" />
+            <Picker.Item label="Weekly" value="weekly" />
+            <Picker.Item label="Monthly" value="monthly" />
+          </Picker>
+          <Text style={styles.progressText}>
+            Total Exercise Time ({selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)}):{' '}
+            {formatTime(getTotalDuration(selectedPeriod))}
+          </Text>
+          <View style={styles.chartContainer}>
+            <Text style={styles.chartLabel}>Exercise Progress</Text>
+            <Progress.Bar
+              progress={randomProgress}
+              width={300}
+              height={15}
+              color="#007bff"
+              borderRadius={10}
+            />
+            <Text style={styles.chartPercentage}>{(randomProgress * 100).toFixed(1)}%</Text>
+          </View>
+        </View>
+      </ScrollView>
+      <Footer navigation={navigation} activeScreen="ExerciseScreen" />
+    </View>
   );
 };
 
 // Styles
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
+  },
+  scrollContainer: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#f9f9f9',
     justifyContent: 'center',
   },
   title: {
@@ -317,4 +323,3 @@ const styles = StyleSheet.create({
 });
 
 export default ExerciseUI;
-
