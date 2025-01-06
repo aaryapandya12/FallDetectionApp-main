@@ -11,31 +11,25 @@
 // }
 
 // const MyProfileScreen: React.FC<MyProfileScreenProps> = ({ route }) => {
-//   const { userData = { name: '', age: '', height: '', weight: '', emergencyContact1: '', emergencyContact2: '' } } = route.params || {};
-
-//   if (!userData) {
-//     return (
-//       <View style={styles.container}>
-//         <Text>Loading...</Text>
-//       </View>
-//     );
-//   }
-
+//   const { userData } = route.params;
+  
 //   return (
-//     <ScrollView style={styles.container}>
+//     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+//       {/* Header Section */}
 //       <View style={styles.header}>
 //         <Image
 //           source={{ uri: 'https://via.placeholder.com/150' }}
 //           style={styles.profileImage}
 //         />
 //         <Text style={styles.userName}>{userData.name}</Text>
-//         <Text style={styles.userEmail}>Age: {userData.age}</Text>
+//         <Text style={styles.userAge}>Age: {userData.age}</Text>
 //         <TouchableOpacity style={styles.editButton}>
-//           <MaterialIcons name="edit" size={20} color="#fff" />
+//           <MaterialIcons name="edit" size={18} color="#fff" />
 //           <Text style={styles.editButtonText}>Edit Profile</Text>
 //         </TouchableOpacity>
 //       </View>
 
+//       {/* Details Section */}
 //       <View style={styles.detailsSection}>
 //         <View style={styles.detailItem}>
 //           <Text style={styles.detailLabel}>Height</Text>
@@ -55,6 +49,7 @@
 //         </View>
 //       </View>
 
+//       {/* Additional Info Section */}
 //       <View style={styles.additionalInfoSection}>
 //         <Text style={styles.sectionTitle}>Additional Information</Text>
 //         <Text style={styles.additionalInfoText}>
@@ -64,26 +59,32 @@
 //     </ScrollView>
 //   );
 // };
+
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
-//     backgroundColor: '#f5f5f5',
+//     backgroundColor: '#f8f9fa',
+//   },
+//   scrollContent: {
+//     paddingBottom: 20,
 //   },
 //   header: {
 //     alignItems: 'center',
-//     paddingVertical: 40,
+//     paddingVertical: 30,
 //     backgroundColor: '#fff',
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#e0e0e0',
 //     marginBottom: 20,
 //     shadowColor: '#000',
 //     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
+//     shadowOpacity: 0.05,
 //     shadowRadius: 6,
 //     elevation: 3,
 //   },
 //   profileImage: {
-//     width: 120,
-//     height: 120,
-//     borderRadius: 60,
+//     width: 100,
+//     height: 100,
+//     borderRadius: 50,
 //     marginBottom: 15,
 //     borderWidth: 3,
 //     borderColor: '#fff',
@@ -94,12 +95,12 @@
 //     elevation: 3,
 //   },
 //   userName: {
-//     fontSize: 26,
-//     fontWeight: 'bold',
+//     fontSize: 24,
+//     fontWeight: '600',
 //     color: '#333',
 //     marginBottom: 5,
 //   },
-//   userEmail: {
+//   userAge: {
 //     fontSize: 16,
 //     color: '#777',
 //     marginBottom: 20,
@@ -113,14 +114,14 @@
 //     borderRadius: 25,
 //     shadowColor: '#007bff',
 //     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.3,
+//     shadowOpacity: 0.2,
 //     shadowRadius: 4,
-//     elevation: 5,
+//     elevation: 3,
 //   },
 //   editButtonText: {
 //     fontSize: 16,
 //     color: '#fff',
-//     marginLeft: 10,
+//     marginLeft: 8,
 //     fontWeight: '500',
 //   },
 //   detailsSection: {
@@ -131,7 +132,7 @@
 //     borderRadius: 10,
 //     shadowColor: '#000',
 //     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
+//     shadowOpacity: 0.05,
 //     shadowRadius: 6,
 //     elevation: 3,
 //   },
@@ -156,7 +157,7 @@
 //     borderRadius: 10,
 //     shadowColor: '#000',
 //     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
+//     shadowOpacity: 0.05,
 //     shadowRadius: 6,
 //     elevation: 3,
 //   },
@@ -174,6 +175,7 @@
 // });
 
 // export default MyProfileScreen;
+
 
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';

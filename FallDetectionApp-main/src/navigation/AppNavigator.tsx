@@ -21,6 +21,7 @@ import OxygenScreen from "../components/OxygenScreen";
 import Footsteps from "../components/Footsteps";
 import MyProfileScreen from "../components/MyProfileScreen";
 import ExerciseScreen from "../components/ExerciseScreen"
+import Welcome from "../components/Welcome"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -43,8 +44,9 @@ export type UserData = {
 // Define the parameter list for the screens
 export type RootStackParamList = {
   Register: undefined;
-  PersonalDetail: undefined;
+  // PersonalDetail: undefined;
   HomeScreen: undefined;
+  PersonalDetail: { email: string };
   // HomeScreen: { userData: UserData };
   SettingsScreen: undefined;
   MonitoringScreen: undefined;
@@ -60,6 +62,7 @@ export type RootStackParamList = {
   Footsteps: undefined;
   MyProfileScreen: { userData: UserData }; // Add userData parameter for MyProfileScreen
   ExerciseScreen:undefined;
+  Welcome:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -67,7 +70,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const AppNavigator: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Register">
+      <Stack.Navigator initialRouteName="LoadingScreen">
         <Stack.Screen
           name="LoadingScreen"
           component={LoadingScreen}
@@ -106,6 +109,11 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen
           name="HeartScreen"
           component={HeartScreen}
+        />
+
+<Stack.Screen
+          name="Welcome"
+          component={Welcome}
         />
 
 <Stack.Screen

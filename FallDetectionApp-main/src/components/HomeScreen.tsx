@@ -9,6 +9,7 @@ import {
   Dimensions,
   ImageBackground,
   Modal,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Footer from "./Footer";
@@ -77,7 +78,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       icon: "medkit", // Updated icon for Medicine Reminder
       title: "Medicine Reminder",
       description: "Set reminders for your medications and stay on track.",
-      background: require("../../assets/gps.jpg"), // Add a relevant image
+      background: require("../../assets/reminder.png"), // Add a relevant image
       onPress: () => navigation.navigate("MedicineReminder"), // Add navigation
     },
   ];
@@ -89,6 +90,8 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const closeMenu = () => {
     setMenuVisible(false);
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -123,6 +126,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             >
               <Ionicons name="person" size={24} color="black" />
               <Text style={styles.menuText}>Profile Details</Text>
+             
             </TouchableOpacity>
 
             {/* Settings Option */}

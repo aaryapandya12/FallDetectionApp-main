@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 type RootStackParamList = {
   LoginScreen: undefined;
@@ -17,37 +18,98 @@ interface LoginScreenProps {
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Validate email format
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Validate password (minimum 8 characters, at least one letter and one number)
+  const validatePassword = (password: string) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+  // const handleLogin = async () => {
+  //   if (!email || !password) {
+  //     Alert.alert('Incomplete Fields', 'Please fill in all fields');
+  //     return;
+  //   }
+
+  //   if (!validateEmail(email)) {
+  //     Alert.alert('Invalid Email', 'Please enter a valid email address');
+  //     return;
+  //   }
+
+  //   if (!validatePassword(password)) {
+  //     Alert.alert(
+  //       'Invalid Password',
+  //       'Password must be at least 8 characters long and contain at least one letter and one number'
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.post('http://192.168.49.143:5000/login', {
+  //       email,
+  //       password,
+  //     });
+
+  //     if (response.status === 200) {
+  //       await AsyncStorage.setItem('isLoggedIn', 'true');
+  //       Alert.alert('Login Successful', 'You have logged in successfully!');
+  //       navigation.navigate('HomeScreen');
+  //     } else {
+  //       Alert.alert('Login Failed', 'Invalid email or password');
+  //     }
+  //   } catch (error) {
+  //     console.error('Login error:', error);
+  //     Alert.alert('Error', 'An error occurred while logging in');
+  //   }
+  // };
 
   const handleLogin = async () => {
-    if (!username || !password) {
+    if (!email || !password) {
       Alert.alert('Incomplete Fields', 'Please fill in all fields');
       return;
     }
   
-    try {
-      const storedData = await AsyncStorage.getItem('userData');
-      if (storedData) {
-        const userData = JSON.parse(storedData);
+    if (!validateEmail(email)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address');
+      return;
+    }
   
-        if (username === userData.username && password === userData.password) {
-          // Store login state
-          await AsyncStorage.setItem('isLoggedIn', 'true');
-          Alert.alert('Login Successful', 'You have logged in successfully!');
-          navigation.navigate('HomeScreen');
-        } else {
-          Alert.alert('Login Failed', 'Invalid username or password');
-        }
-      } else {
-        Alert.alert('Login Failed', 'No registered user found');
+    if (!validatePassword(password)) {
+      Alert.alert(
+        'Invalid Password',
+        'Password must be at least 8 characters long and contain at least one letter and one number'
+      );
+      return;
+    }
+  
+    try {
+      const response = await axios.post('http://192.168.49.143:5000/login', {
+        email,
+        password,
+      });
+  
+      if (response.status === 200) {
+        await AsyncStorage.setItem('isLoggedIn', 'true');
+        Alert.alert('Login Successful', 'You have logged in successfully!');
+        navigation.navigate('HomeScreen');
       }
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while logging in');
+      if (error.response && error.response.status === 401) {
+        Alert.alert('Login Failed', 'Invalid email or password');
+      } else {
+        console.error('Login error:', error);
+        Alert.alert('Error', 'An error occurred while logging in');
+      }
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
@@ -64,10 +126,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor="#999"
-          value={username}
-          onChangeText={setUsername}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
@@ -76,6 +140,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          autoCapitalize="none"
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>

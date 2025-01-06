@@ -10,7 +10,7 @@ const LoadingScreen = ({ navigation }: {navigation: any}) => {
       if (isLoggedIn === 'true') {
         navigation.replace('HomeScreen'); // Navigate to Home if logged in
       } else {
-        navigation.replace('LoginScreen'); // Navigate to Login if not logged in
+        navigation.replace('Register'); // Navigate to Login if not logged in
       }
     };
 
