@@ -33,43 +33,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     return passwordRegex.test(password);
   };
 
-  // const handleLogin = async () => {
-  //   if (!email || !password) {
-  //     Alert.alert('Incomplete Fields', 'Please fill in all fields');
-  //     return;
-  //   }
 
-  //   if (!validateEmail(email)) {
-  //     Alert.alert('Invalid Email', 'Please enter a valid email address');
-  //     return;
-  //   }
-
-  //   if (!validatePassword(password)) {
-  //     Alert.alert(
-  //       'Invalid Password',
-  //       'Password must be at least 8 characters long and contain at least one letter and one number'
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.post('http://192.168.49.143:5000/login', {
-  //       email,
-  //       password,
-  //     });
-
-  //     if (response.status === 200) {
-  //       await AsyncStorage.setItem('isLoggedIn', 'true');
-  //       Alert.alert('Login Successful', 'You have logged in successfully!');
-  //       navigation.navigate('HomeScreen');
-  //     } else {
-  //       Alert.alert('Login Failed', 'Invalid email or password');
-  //     }
-  //   } catch (error) {
-  //     console.error('Login error:', error);
-  //     Alert.alert('Error', 'An error occurred while logging in');
-  //   }
-  // };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -91,7 +55,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
   
     try {
-      const response = await axios.post('http://192.168.49.143:5000/login', {
+      const response = await axios.post('http://192.168.234.143:5000/login', {
         email,
         password,
       });

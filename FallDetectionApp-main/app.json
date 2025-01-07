@@ -13,21 +13,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "supportsBackgroundModes": true
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "useNextNotificationsApi": true,
-        "isNotificationService": true,
-        "isMediaBrowserService": true,
-        "permissions": [
-          "FOREGROUND_SERVICE",
-          "READ_EXTERNAL_STORAGE",
-          "WRITE_EXTERNAL_STORAGE"
-        ]
+        "backgroundColor": "#ffffff"
       },
       "package": "com.aaryap12.Health"
     },
@@ -38,9 +29,6 @@
       "eas": {
         "projectId": "17dd8ccf-8b1b-4cbf-a29a-49c106c62d92"
       }
-    },
-    "plugins": [
-      "expo-video"
-    ]
+    }
   }
 }
