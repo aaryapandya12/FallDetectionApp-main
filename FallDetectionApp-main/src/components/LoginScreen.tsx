@@ -33,8 +33,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     return passwordRegex.test(password);
   };
 
-
-
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Incomplete Fields', 'Please fill in all fields');
@@ -55,7 +53,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
   
     try {
-      const response = await axios.post('http://192.168.234.143:5000/login', {
+      const response = await axios.post('http://192.168.213.143:5000/login', {
         email,
         password,
       });
@@ -66,14 +64,23 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         navigation.navigate('HomeScreen');
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        Alert.alert('Login Failed', 'Invalid email or password');
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 401) {
+          Alert.alert('Login Failed', 'Invalid email or password');
+        } else {
+          console.error('Login error:', error);
+          Alert.alert('Error', 'An error occurred while logging in');
+        }
+      } else if (error instanceof Error) {
+        console.error('Login error:', error);
+        Alert.alert('Error', 'An unexpected error occurred');
       } else {
         console.error('Login error:', error);
-        Alert.alert('Error', 'An error occurred while logging in');
+        Alert.alert('Error', 'An unknown error occurred');
       }
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>

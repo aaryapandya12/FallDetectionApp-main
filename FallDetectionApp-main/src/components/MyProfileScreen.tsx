@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'rea
 import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { UserContext } from '../context/UserContext';
 
 type MyProfileScreenRouteProp = RouteProp<RootStackParamList, 'MyProfileScreen'>;
 
@@ -11,7 +12,8 @@ interface MyProfileScreenProps {
 }
 
 const MyProfileScreen: React.FC<MyProfileScreenProps> = ({ route }) => {
-  const { userData = { name: '', age: '', height: '', weight: '', emergencyContact1: '', emergencyContact2: '' } } = route.params || {};
+  // const { userData = { name: '', age: '', height: '', weight: '', emergencyContact1: '', emergencyContact2: '' } } = route.params || {};
+  const { userData } = React.useContext(UserContext);
 
   if (!userData) {
     return (

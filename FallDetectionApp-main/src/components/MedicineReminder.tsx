@@ -20,20 +20,21 @@ import { Ionicons } from "@expo/vector-icons";
 import { Calendar } from "react-native-calendars";
 import RemindersList from "./RemindersList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Reminder } from './types';
 
-interface Reminder {
-  id: string;
-  medicineName: string;
-  medicineDescription: string;
-  image: string | null;
-  time: Date;
-  startDate: string;
-  endDate: string;
-  taken: boolean;
-  skipped: boolean;
-  frequency?: string;
-  numberOfMedications?: number;
-}
+// interface Reminder {
+//   id: string;
+//   medicineName: string;
+//   medicineDescription: string;
+//   image: string | null;
+//   time: Date;
+//   startDate: string;
+//   endDate: string;
+//   taken: boolean;
+//   skipped: boolean;
+//   frequency?: string;
+//   numberOfMedications?: number;
+// }
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -137,6 +138,7 @@ export default function MedicineReminder() {
       endDate: "",
       taken: false,
       skipped: false,
+      numberOfMedications:1,
     });
   };
 

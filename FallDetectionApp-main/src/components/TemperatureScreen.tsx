@@ -6,22 +6,22 @@ import { useNavigation } from '@react-navigation/native';
 
 const TemperatureScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [temperature, setTemperature] = useState(98.6); // Simulated real-time temperature
+  const [temperature, setTemperature] = useState(98.6); 
   const [isMonitoring, setIsMonitoring] = useState(false);
   const animatedValue = new Animated.Value(0);
 
-  // Simulate real-time temperature updates
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isMonitoring) {
       interval = setInterval(() => {
-        setTemperature(Math.floor(Math.random() * (100 - 95 + 1) + 95)); // Random temperature between 95-100
+        setTemperature(Math.floor(Math.random() * (100 - 95 + 1) + 95)); 
       }, 2000);
     }
     return () => clearInterval(interval);
   }, [isMonitoring]);
 
-  // Animation for the temperature value
+
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: 1,
@@ -41,25 +41,21 @@ const TemperatureScreen: React.FC = () => {
     ],
   };
 
-  // Sample temperature data for the graph
   const temperatureData = {
-    // labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
       {
-        data: [98.6, 98.7, 98.5, 98.8, 99.0, 98.9, 98.7], // Example temperature values
-        color: (opacity = 1) => `rgba(74, 144, 226, ${opacity})`, // Line color
-        strokeWidth: 3, // Line width
+        data: [98.6, 98.7, 98.5, 98.8, 99.0, 98.9, 98.7], 
+        color: (opacity = 1) => `rgba(74, 144, 226, ${opacity})`, 
+        strokeWidth: 3, 
       },
     ],
   };
 
   return (
     <View style={styles.container}>
-
-      {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Real-Time Temperature Display */}
+
         <View style={styles.realTimeContainer}>
           <Animated.Text style={[styles.temperatureValue, animatedStyle]}>
             {temperature}°F
@@ -67,7 +63,7 @@ const TemperatureScreen: React.FC = () => {
           <Text style={styles.temperatureLabel}>Current Body Temperature</Text>
         </View>
 
-        {/* Start/Stop Monitoring Button */}
+
         <TouchableOpacity
           style={[styles.monitorButton, isMonitoring && styles.stopButton]}
           onPress={() => setIsMonitoring(!isMonitoring)}

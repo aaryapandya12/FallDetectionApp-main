@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import axios from 'axios';
 import { RouteProp } from '@react-navigation/native';
+import { UserContext } from '../context/UserContext';
 
 type PersonalDetailScreenRouteProp = RouteProp<RootStackParamList, 'PersonalDetail'>;
 
@@ -16,6 +17,7 @@ interface PersonalDetailScreenProps {
 }
 
 const PersonalDetailScreen: React.FC<PersonalDetailScreenProps> = ({ navigation, route }) => {
+  const { setUserData } = React.useContext(UserContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
@@ -81,27 +83,50 @@ const PersonalDetailScreen: React.FC<PersonalDetailScreenProps> = ({ navigation,
       return;
     }
 
-    try {
-      const userData = {
-        email,
-        name,
-        age,
-        height,
-        weight,
-        emergencyContact1,
-        emergencyContact2,
-      };
+  //   try {
+  //     const userData = {
+  //       email,
+  //       name,
+  //       age,
+  //       height,
+  //       weight,
+  //       emergencyContact1,
+  //       emergencyContact2,
+  //     };
 
-      const response = await axios.post('http://192.168.234.143:5000/api/save-details', userData);
+  //     const response = await axios.post('http://192.168.213.143:5000/api/save-details', userData);
 
-      if (response.status === 200) {
-        Alert.alert('Success', 'Details saved successfully');
-        navigation.navigate('Welcome');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to save details');
+  //     if (response.status === 200) {
+  //       Alert.alert('Success', 'Details saved successfully');
+  //       navigation.navigate('Welcome');
+  //     }
+  //   } catch (error) {
+  //     Alert.alert('Error', 'Failed to save details');
+  //   }
+  // };
+  try {
+    const userData = {
+      email,
+      name,
+      age,
+      height,
+      weight,
+      emergencyContact1,
+      emergencyContact2,
+    };
+
+    const response = await axios.post('http://192.168.213.143:5000/api/save-details', userData);
+
+    if (response.status === 200) {
+      Alert.alert('Success', 'Details saved successfully');
+      setUserData(userData); // Set userData in context
+      navigation.navigate('Welcome'); // Navigate to Welcome screen
     }
-  };
+  } catch (error) {
+    Alert.alert('Error', 'Failed to save details');
+  }
+};
+
 
   return (
     <View style={styles.container}>

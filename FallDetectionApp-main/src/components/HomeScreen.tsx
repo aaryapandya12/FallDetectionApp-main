@@ -9,7 +9,6 @@ import {
   Dimensions,
   ImageBackground,
   Modal,
-  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Footer from "./Footer";
@@ -91,8 +90,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     setMenuVisible(false);
   };
 
-
-
+  
   return (
     <View style={styles.container}>
       {/* Navigation Bar */}

@@ -1,9 +1,13 @@
-// App.tsx
 import React from "react";
 import AppNavigator from "./src/navigation/AppNavigator"; // Import the navigator
+import { UserProvider } from "./src/context/UserContext"; // Import the UserProvider
 
 const App: React.FC = () => {
-  return <AppNavigator />; // Use the navigator
+  return (
+    <UserProvider>
+      <AppNavigator />
+    </UserProvider>
+  );
 };
 
 export default App;

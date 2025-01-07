@@ -2,19 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, Dimensions, ScrollView,Alert, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'; // For icons
+import { Reminder } from './types';
 
-interface Reminder {
-  id: string;
-  medicineName: string;
-  medicineDescription: string;
-  image: string | null;
-  time: Date;
-  startDate: string;
-  endDate: string;
-  taken: boolean;
-  skipped: boolean;
-  numberOfMedications: number; // Added field
-}
+// interface Reminder {
+//   id: string;
+//   medicineName: string;
+//   medicineDescription: string;
+//   image: string | null;
+//   time: Date;
+//   startDate: string;
+//   endDate: string;
+//   taken: boolean;
+//   skipped: boolean;
+//   numberOfMedications: number; // Added field
+// }
 
 interface Props {
   reminders: Reminder[];

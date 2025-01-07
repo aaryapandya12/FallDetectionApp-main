@@ -1,131 +1,3 @@
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
-// const cors = require('cors');
-
-// const app = express();
-// const PORT = process.env.PORT || 5000;
-
-// // Middleware
-// app.use(cors());
-// app.use(bodyParser.json());
-
-// // Connect to MongoDB
-// mongoose.connect('mongodb+srv://aaryapandya611:mlT3Hnl6Vgn4Hj4i@cluster0.rci4c.mongodb.net', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-// const db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', () => {
-//   console.log('Connected to MongoDB');
-// });
-
-// // User Schema
-// const userSchema = new mongoose.Schema({
-//   email: String,
-//   username: String,
-//   password: String,
-//   personalDetails: {
-//     name: String,
-//     age: Number,
-//     height: Number,
-//     weight: Number,
-//     emergencyContact1: String,
-//     emergencyContact2: String,
-//   },
-// });
-
-// const User = mongoose.model('User', userSchema);
-
-// // Routes
-// // app.post('/register', async (req, res) => {
-// //   const { email, username, password } = req.body;
-
-// //   try {
-// //     const newUser = new User({ email, username, password });
-// //     await newUser.save();
-// //     res.status(201).json({ message: 'User registered successfully' });
-// //   } catch (error) {
-// //     res.status(500).json({ message: 'Error registering user', error });
-// //   }
-// // });
-
-// app.post('/register', async (req, res) => {
-//     console.log('Register request received:', req.body); // Log the request body
-//     const { email, username, password } = req.body;
-  
-//     try {
-//       const newUser = new User({ email, username, password });
-//       await newUser.save();
-//       res.status(201).json({ message: 'User registered successfully' });
-//     } catch (error) {
-//       console.error('Error registering user:', error); // Log the error
-//       res.status(500).json({ message: 'Error registering user', error });
-//     }
-//   });
-
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     const user = await User.findOne({ email });
-
-//     if (user && user.password === password) {
-//       res.status(200).json({ message: 'Login successful', user });
-//     } else {
-//       res.status(401).json({ message: 'Invalid username or password' });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error logging in', error });
-//   }
-// });
-
-// app.post('/api/save-details', async (req, res) => {
-//   const { email, name, age, height, weight, emergencyContact1, emergencyContact2 } = req.body;
-
-//   if (!email || !name || !age || !height || !weight || !emergencyContact1 || !emergencyContact2) {
-//     return res.status(400).json({ message: 'All fields are required' });
-//   }
-
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     user.personalDetails = { name, age, height, weight, emergencyContact1, emergencyContact2 };
-//     await user.save();
-
-//     res.status(200).json({ message: 'Details saved successfully', user });
-//   } catch (error) {
-//     console.error('Error saving details:', error);
-//     res.status(500).json({ message: 'Error saving details', error });
-//   }
-// });
-
-// app.get('/api/get-details', async (req, res) => {
-//   const { email } = req.query;
-
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user || !user.personalDetails) {
-//       return res.status(404).json({ message: 'No user data found' });
-//     }
-
-//     res.status(200).json(user.personalDetails);
-//   } catch (error) {
-//     console.error('Error fetching details:', error);
-//     res.status(500).json({ message: 'Error fetching details', error });
-//   }
-// });
-// // Start the server
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -219,56 +91,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// app.post('/api/save-details', async (req, res) => {
-//   const {name, age, height, weight, emergencyContact1, emergencyContact2 } = req.body;
-
-//   if (!name || !age || !height || !weight || !emergencyContact1 || !emergencyContact2) {
-//     return res.status(400).json({ message: 'All fields are required' });
-//   }
-
-//   try {
-//     const user = await User.findOne({ username });
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     user.personalDetails = { name, age, height, weight, emergencyContact1, emergencyContact2 };
-//     await user.save();
-
-//     res.status(200).json({ message: 'Details saved successfully', user });
-//   } catch (error) {
-//     console.error('Error saving details:', error);
-//     res.status(500).json({ message: 'Error saving details', error });
-//   }
-// });
-
-// app.post(
-//   '/api/save-details',
-//   async (req, res) => {
-//     const { email, name, age, height, weight, emergencyContact1, emergencyContact2 } = req.body;
-
-//     console.log('Incoming Request:', req.body);
-
-//     if (!email || !name || !age || !height || !weight || !emergencyContact1 || !emergencyContact2) {
-//       return res.status(400).json({ message: 'All fields are required' });
-//     }
-
-//     try {
-//       const user = await User.findOne({ email });
-//       if (!user) {
-//         return res.status(404).json({ message: 'User not found' });
-//       }
-
-//       user.personalDetails = { name, age, height, weight, emergencyContact1, emergencyContact2 };
-//       await user.save();
-
-//       res.status(200).json({ message: 'Details saved successfully', user });
-//     } catch (error) {
-//       console.error('Error saving details:', error.message);
-//       res.status(500).json({ message: 'Error saving details', error: error.message });
-//     }
-//   }
-// );
 
 app.post('/api/save-details', async (req, res) => {
   const { email, name, age, height, weight, emergencyContact1, emergencyContact2 } = req.body;
@@ -305,6 +127,213 @@ app.post('/api/save-details', async (req, res) => {
     res.status(500).json({ message: 'Error saving details', error: error.message });
   }
 });
+
+// Reminder Schema
+const reminderSchema = new mongoose.Schema({
+  userId: { type: String, required: true }, // Associate reminders with a user
+  medicineName: { type: String, required: true },
+  medicineDescription: { type: String, default: '' },
+  image: { type: String, default: null },
+  time: { type: Date, required: true },
+  startDate: { type: String, required: true },
+  endDate: { type: String, required: true },
+  taken: { type: Boolean, default: false },
+  skipped: { type: Boolean, default: false },
+  frequency: { type: String, default: 'daily' },
+  numberOfMedications: { type: Number, default: 1 },
+});
+
+const Reminder = mongoose.model('Reminder', reminderSchema);
+
+// History Schema
+const historySchema = new mongoose.Schema({
+  userId: { type: String, required: true }, // Associate history with a user
+  medicineName: { type: String, required: true },
+  medicineDescription: { type: String, default: '' },
+  image: { type: String, default: null },
+  time: { type: Date, required: true },
+  startDate: { type: String, required: true },
+  endDate: { type: String, required: true },
+  taken: { type: Boolean, default: false },
+  skipped: { type: Boolean, default: false },
+  frequency: { type: String, default: 'daily' },
+  numberOfMedications: { type: Number, default: 1 },
+});
+
+const History = mongoose.model('History', historySchema);
+
+// Routes for Reminders
+// Create a new reminder
+app.post('/api/reminders', async (req, res) => {
+  const { userId, medicineName, medicineDescription, image, time, startDate, endDate, frequency, numberOfMedications } = req.body;
+
+  if (!userId || !medicineName || !time || !startDate || !endDate) {
+    return res.status(400).json({ message: 'Required fields are missing' });
+  }
+
+  try {
+    const newReminder = new Reminder({
+      userId,
+      medicineName,
+      medicineDescription,
+      image,
+      time: new Date(time),
+      startDate,
+      endDate,
+      frequency,
+      numberOfMedications,
+    });
+
+    await newReminder.save();
+    res.status(201).json({ message: 'Reminder created successfully', reminder: newReminder });
+  } catch (error) {
+    console.error('Error creating reminder:', error);
+    res.status(500).json({ message: 'Error creating reminder', error });
+  }
+});
+
+// Get all reminders for a user
+app.get('/api/reminders/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const reminders = await Reminder.find({ userId });
+    res.status(200).json({ reminders });
+  } catch (error) {
+    console.error('Error fetching reminders:', error);
+    res.status(500).json({ message: 'Error fetching reminders', error });
+  }
+});
+
+// Update a reminder
+app.put('/api/reminders/:id', async (req, res) => {
+  const { id } = req.params;
+  const { medicineName, medicineDescription, image, time, startDate, endDate, frequency, numberOfMedications } = req.body;
+
+  try {
+    const updatedReminder = await Reminder.findByIdAndUpdate(
+      id,
+      {
+        medicineName,
+        medicineDescription,
+        image,
+        time: new Date(time),
+        startDate,
+        endDate,
+        frequency,
+        numberOfMedications,
+      },
+      { new: true }
+    );
+
+    if (!updatedReminder) {
+      return res.status(404).json({ message: 'Reminder not found' });
+    }
+
+    res.status(200).json({ message: 'Reminder updated successfully', reminder: updatedReminder });
+  } catch (error) {
+    console.error('Error updating reminder:', error);
+    res.status(500).json({ message: 'Error updating reminder', error });
+  }
+});
+
+// Delete a reminder
+app.delete('/api/reminders/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedReminder = await Reminder.findByIdAndDelete(id);
+    if (!deletedReminder) {
+      return res.status(404).json({ message: 'Reminder not found' });
+    }
+
+    res.status(200).json({ message: 'Reminder deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting reminder:', error);
+    res.status(500).json({ message: 'Error deleting reminder', error });
+  }
+});
+
+// Routes for History
+// Move a reminder to history
+app.post('/api/history', async (req, res) => {
+  const { userId, reminderId, taken, skipped } = req.body;
+
+  if (!userId || !reminderId || (taken === undefined && skipped === undefined)) {
+    return res.status(400).json({ message: 'Required fields are missing' });
+  }
+
+  try {
+    const reminder = await Reminder.findById(reminderId);
+    if (!reminder) {
+      return res.status(404).json({ message: 'Reminder not found' });
+    }
+
+    const newHistory = new History({
+      userId,
+      ...reminder.toObject(),
+      taken,
+      skipped,
+    });
+
+    await newHistory.save();
+    await Reminder.findByIdAndDelete(reminderId);
+
+    res.status(201).json({ message: 'Reminder moved to history', history: newHistory });
+  } catch (error) {
+    console.error('Error moving reminder to history:', error);
+    res.status(500).json({ message: 'Error moving reminder to history', error });
+  }
+});
+
+// Get all history for a user
+app.get('/api/history/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const history = await History.find({ userId });
+    res.status(200).json({ history });
+  } catch (error) {
+    console.error('Error fetching history:', error);
+    res.status(500).json({ message: 'Error fetching history', error });
+  }
+});
+
+// Delete a history entry
+app.delete('/api/history/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedHistory = await History.findByIdAndDelete(id);
+    if (!deletedHistory) {
+      return res.status(404).json({ message: 'History entry not found' });
+    }
+
+    res.status(200).json({ message: 'History entry deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting history entry:', error);
+    res.status(500).json({ message: 'Error deleting history entry', error });
+  }
+});
+
+// Delete all history for a user
+app.delete('/api/history/all/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    await History.deleteMany({ userId });
+    res.status(200).json({ message: 'All history deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all history:', error);
+    res.status(500).json({ message: 'Error deleting all history', error });
+  }
+});
+
+// // Error handling middleware
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ message: 'Something went wrong!' });
+// });
 
 
 // Error handling middleware

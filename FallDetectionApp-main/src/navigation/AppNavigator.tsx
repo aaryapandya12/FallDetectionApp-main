@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { UserProvider } from "../context/UserContext";
 
 // Import Screens
 import RegisterScreen from "../components/RegisterScreen";
@@ -69,6 +70,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
   return (
+    
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LoadingScreen">
         <Stack.Screen

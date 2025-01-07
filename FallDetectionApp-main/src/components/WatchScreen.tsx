@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient"; // For gradient background
-import Footer from "./Footer"; // Importing Footer
+import { LinearGradient } from "expo-linear-gradient"; 
+import Footer from "./Footer"; 
 
 const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-  // Mock data for smartwatch features
+
   const activityData = {
     steps: 4523,
-    distance: 3.2, // in km
+    distance: 3.2, 
     activeMinutes: 45,
   };
 
@@ -18,7 +18,7 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   const weatherData = {
-    temperature: 22, // in °C
+    temperature: 22,
     condition: "Sunny",
   };
 
@@ -27,9 +27,9 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Updated Smartwatch Connected Header */}
+      
         <LinearGradient
-          colors={["#2196F3", "#1976D2"]} // Gradient colors
+          colors={["#2196F3", "#1976D2"]} 
           style={styles.header}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -39,7 +39,6 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           <Text style={styles.subtitle}>Real-time health and activity monitoring</Text>
         </LinearGradient>
 
-        {/* Activity Tracking */}
         <Text style={styles.sectionTitle}>Activity Tracking</Text>
         <View style={styles.metricsContainer}>
           <View style={styles.metricCard}>
@@ -61,7 +60,7 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Sleep Monitoring */}
+     
         <Text style={styles.sectionTitle}>Sleep Monitoring</Text>
         <View style={styles.sleepContainer}>
           <View style={styles.sleepCard}>
@@ -77,7 +76,6 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Weather Updates */}
         <Text style={styles.sectionTitle}>Weather Updates</Text>
         <View style={styles.weatherContainer}>
           <Ionicons name="sunny" size={50} color="#FFC107" />
@@ -86,7 +84,6 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </Text>
         </View>
 
-        {/* Music Control */}
         <Text style={styles.sectionTitle}>Music Control</Text>
         <View style={styles.musicContainer}>
           <Ionicons name="musical-notes" size={30} color="#E91E63" />
@@ -105,7 +102,7 @@ const WatchScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Footer */}
+
       <Footer navigation={navigation} activeScreen="WatchScreen" />
     </View>
   );
