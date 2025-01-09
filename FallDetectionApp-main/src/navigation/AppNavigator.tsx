@@ -1,9 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { UserProvider } from "../context/UserContext";
-
-// Import Screens
 import RegisterScreen from "../components/RegisterScreen";
 import PersonalDetailScreen from "../components/PersonalDetailScreen";
 import HomeScreen from "../components/HomeScreen";
@@ -21,8 +18,8 @@ import TemperatureScreen from "../components/TemperatureScreen";
 import OxygenScreen from "../components/OxygenScreen";
 import Footsteps from "../components/Footsteps";
 import MyProfileScreen from "../components/MyProfileScreen";
-import ExerciseScreen from "../components/ExerciseScreen"
-import Welcome from "../components/Welcome"
+import ExerciseScreen from "../components/ExerciseScreen";
+import Welcome from "../components/Welcome";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -62,15 +59,14 @@ export type RootStackParamList = {
   OxygenScreen: undefined;
   Footsteps: undefined;
   MyProfileScreen: { userData: UserData }; // Add userData parameter for MyProfileScreen
-  ExerciseScreen:undefined;
-  Welcome:undefined;
+  ExerciseScreen: undefined;
+  Welcome: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
   return (
-    
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LoadingScreen">
         <Stack.Screen
@@ -108,36 +104,15 @@ const AppNavigator: React.FC = () => {
           component={MyProfileScreen}
           options={{ title: "My Profile" }} // Add a title for MyProfileScreen
         />
-        <Stack.Screen
-          name="HeartScreen"
-          component={HeartScreen}
-        />
+        <Stack.Screen name="HeartScreen" component={HeartScreen} />
 
-<Stack.Screen
-          name="Welcome"
-          component={Welcome}
-        />
+        <Stack.Screen name="Welcome" component={Welcome} />
 
-<Stack.Screen
-          name="ExerciseScreen"
-          component={ExerciseScreen}
-        />
-        <Stack.Screen
-          name="Pressure"
-          component={Pressure}
-        />
-        <Stack.Screen
-          name="TemperatureScreen"
-          component={TemperatureScreen}
-        />
-        <Stack.Screen
-          name="OxygenScreen"
-          component={OxygenScreen}
-        />
-        <Stack.Screen
-          name="Footsteps"
-          component={Footsteps}
-        />
+        <Stack.Screen name="ExerciseScreen" component={ExerciseScreen} />
+        <Stack.Screen name="Pressure" component={Pressure} />
+        <Stack.Screen name="TemperatureScreen" component={TemperatureScreen} />
+        <Stack.Screen name="OxygenScreen" component={OxygenScreen} />
+        <Stack.Screen name="Footsteps" component={Footsteps} />
         <Stack.Screen
           name="NotificationsScreen"
           component={NotificationsScreen}

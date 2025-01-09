@@ -1,9 +1,10 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { UserContext } from '../context/UserContext';
+import axios from 'axios';
 
 type MyProfileScreenRouteProp = RouteProp<RootStackParamList, 'MyProfileScreen'>;
 
@@ -13,12 +14,41 @@ interface MyProfileScreenProps {
 
 const MyProfileScreen: React.FC<MyProfileScreenProps> = ({ route }) => {
   // const { userData = { name: '', age: '', height: '', weight: '', emergencyContact1: '', emergencyContact2: '' } } = route.params || {};
-  const { userData } = React.useContext(UserContext);
+  const { userData,userEmail,setUserData } = React.useContext(UserContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (userEmail) {
+        try {
+          const response = await axios.get(`http://192.168.217.143:5000/api/user-details?email=${userEmail}`);
+          if (response.status === 200) {
+            setUserData(response.data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [userEmail]);
+
+
+  // if (loading) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text>Loading...</Text>
+  //     </View>
+  //   );
+  // }
 
   if (!userData) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Text>No user data found.</Text>
       </View>
     );
   }

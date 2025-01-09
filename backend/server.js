@@ -8,6 +8,7 @@ require('dotenv').config();
 const morgan = require('morgan');
 const app = express();
 const PORT = process.env.PORT || 5000;
+// const admin = require('firebase-admin');
 
 // Middleware
 app.use(cors());
@@ -43,6 +44,35 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+// const serviceAccount = require('./medicine-reminder-a5169-firebase-adminsdk-yukw6-2edbf2d01f.json');
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
+
+// // API endpoint to send notifications
+// app.post('/send-notification', async (req, res) => {
+//   const { token, title, body, image } = req.body;
+
+//   try {
+//     const message = {
+//       notification: {
+//         title,
+//         body,
+//       },
+//       data: {
+//         image,
+//       },
+//       token,
+//     };
+
+//     await admin.messaging().send(message);
+//     res.status(200).json({ success: true });
+//   } catch (error) {
+//     console.error('Error sending notification:', error);
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
+
 // Routes
 app.post(
   '/register',
@@ -70,6 +100,22 @@ app.post(
     }
   }
 );
+
+app.get('/api/user-details', async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user.personalDetails);
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ message: 'Error fetching user details', error });
+  }
+});
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;

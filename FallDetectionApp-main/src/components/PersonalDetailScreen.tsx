@@ -17,7 +17,7 @@ interface PersonalDetailScreenProps {
 }
 
 const PersonalDetailScreen: React.FC<PersonalDetailScreenProps> = ({ navigation, route }) => {
-  const { setUserData } = React.useContext(UserContext);
+  const { setUserData,setUserEmail } = React.useContext(UserContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
@@ -29,6 +29,7 @@ const PersonalDetailScreen: React.FC<PersonalDetailScreenProps> = ({ navigation,
   useEffect(() => {
     if (route.params?.email) {
       setEmail(route.params.email);
+      setUserEmail(route.params.email);
     }
   }, [route.params?.email]);
 
@@ -115,7 +116,7 @@ const PersonalDetailScreen: React.FC<PersonalDetailScreenProps> = ({ navigation,
       emergencyContact2,
     };
 
-    const response = await axios.post('http://192.168.213.143:5000/api/save-details', userData);
+    const response = await axios.post('http://192.168.235.143:5000/api/save-details', userData);
 
     if (response.status === 200) {
       Alert.alert('Success', 'Details saved successfully');
