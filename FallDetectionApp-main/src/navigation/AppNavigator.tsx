@@ -11,7 +11,7 @@ import LoginScreen from "../components/LoginScreen";
 import LoadingScreen from "../components/LoadingScreen";
 import HeartScreen from "../components/HeartScreen";
 import WatchScreen from "../components/WatchScreen";
-import MedicineReminderScreen from "../components/MedicineReminder"; // Import the new screen
+import MedicineReminderScreen from "../components/MedicineReminder";
 import * as Notifications from "expo-notifications";
 import Pressure from "../components/Pressure";
 import TemperatureScreen from "../components/TemperatureScreen";
@@ -20,6 +20,9 @@ import Footsteps from "../components/Footsteps";
 import MyProfileScreen from "../components/MyProfileScreen";
 import ExerciseScreen from "../components/ExerciseScreen";
 import Welcome from "../components/Welcome";
+import EmergencyContactPage from "../components/EmergencyPage"
+import Locations from "../components/Location";
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -29,7 +32,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Define the UserData type
 export type UserData = {
   name: string;
   age: string;
@@ -39,28 +41,27 @@ export type UserData = {
   emergencyContact2: string;
 };
 
-// Define the parameter list for the screens
 export type RootStackParamList = {
   Register: undefined;
-  // PersonalDetail: undefined;
   HomeScreen: undefined;
   PersonalDetail: { email: string };
-  // HomeScreen: { userData: UserData };
   SettingsScreen: undefined;
   MonitoringScreen: undefined;
   NotificationsScreen: undefined;
   LoginScreen: undefined;
   WatchScreen: undefined;
   LoadingScreen: undefined;
-  MedicineReminder: undefined; // Add MedicineReminder screen
+  MedicineReminder: undefined;
   HeartScreen: undefined;
   Pressure: undefined;
   TemperatureScreen: undefined;
   OxygenScreen: undefined;
   Footsteps: undefined;
-  MyProfileScreen: { userData: UserData }; // Add userData parameter for MyProfileScreen
+  MyProfileScreen: { userData: UserData }; 
   ExerciseScreen: undefined;
   Welcome: undefined;
+  EmergencyContact:undefined;
+  Locations:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -79,6 +80,9 @@ const AppNavigator: React.FC = () => {
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="EmergencyContact" component={EmergencyContactPage} />
+        <Stack.Screen name="Locations" component={Locations}/>
+      
         <Stack.Screen
           name="PersonalDetail"
           component={PersonalDetailScreen}
@@ -102,9 +106,9 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen
           name="MyProfileScreen"
           component={MyProfileScreen}
-          options={{ title: "My Profile" }} // Add a title for MyProfileScreen
+          options={{ title: "My Profile" }}
         />
-        <Stack.Screen name="HeartScreen" component={HeartScreen} />
+        <Stack.Screen name="HeartScreen" component={HeartScreen}/>
 
         <Stack.Screen name="Welcome" component={Welcome} />
 
@@ -130,7 +134,7 @@ const AppNavigator: React.FC = () => {
         />
         <Stack.Screen
           name="MedicineReminder"
-          component={MedicineReminderScreen} // Add MedicineReminder screen
+          component={MedicineReminderScreen} 
           options={{ title: "Medicine Reminder" }}
         />
       </Stack.Navigator>

@@ -20,7 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Calendar } from "react-native-calendars";
 import RemindersList from "./RemindersList";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Reminder } from './types';
+import { Reminder } from "./types";
 
 
 Notifications.setNotificationHandler({
@@ -55,6 +55,36 @@ export default function MedicineReminder() {
   const [frequency, setFrequency] = useState("daily");
   const [numberOfMedications, setNumberOfMedications] = useState(1);
   const [showHistory, setShowHistory] = useState(false); // New state for history modal
+
+  const API_URL = "http://192.168.1.4:5000/api";
+
+  // Fetch reminders from the backend
+  const fetchReminders = async () => {
+    try {
+      const response = await fetch(`${API_URL}/reminders`);
+      const data = await response.json();
+      setReminders(data);
+    } catch (error) {
+      console.error("Error fetching reminders:", error);
+    }
+  };
+
+  // Fetch history reminders from the backend
+  const fetchHistoryReminders = async () => {
+    try {
+      const response = await fetch(`${API_URL}/history`);
+      const data = await response.json();
+      setHistoryReminders(data);
+    } catch (error) {
+      console.error("Error fetching history reminders:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReminders();
+    fetchHistoryReminders();
+  }, []);
+
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -125,7 +155,7 @@ export default function MedicineReminder() {
       endDate: "",
       taken: false,
       skipped: false,
-      numberOfMedications:1,
+      numberOfMedications: 1,
     });
   };
 
@@ -197,7 +227,6 @@ export default function MedicineReminder() {
       setImage(result.assets[0].uri);
     }
   };
-
   const scheduleNotification = async () => {
     if (
       !medicineName ||
@@ -231,17 +260,41 @@ export default function MedicineReminder() {
       numberOfMedications,
     };
 
-    if (editingIndex !== null) {
-      const updatedReminders = [...reminders];
-      updatedReminders[editingIndex] = newReminder;
-      setReminders(updatedReminders);
-      saveRemindersToStorage(updatedReminders);
-      setEditingIndex(null);
-    } else {
-      const updatedReminders = [...reminders, newReminder];
-      setReminders(updatedReminders);
-      saveRemindersToStorage(updatedReminders);
-    }
+    // if (editingIndex !== null) {
+    //   const updatedReminders = [...reminders];
+    //   updatedReminders[editingIndex] = newReminder;
+    //   setReminders(updatedReminders);
+    //   saveRemindersToStorage(updatedReminders);
+    //   setEditingIndex(null);
+    // } else {
+    //   const updatedReminders = [...reminders, newReminder];
+    //   setReminders(updatedReminders);
+    //   saveRemindersToStorage(updatedReminders);
+    // }
+
+    try {
+      if (editingIndex !== null) {
+        // Update reminder
+        const response = await fetch(`${API_URL}/reminders/${reminders[editingIndex].id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newReminder),
+        });
+        const updatedReminder = await response.json();
+        const updatedReminders = [...reminders];
+        updatedReminders[editingIndex] = updatedReminder;
+        setReminders(updatedReminders);
+        setEditingIndex(null);
+      } else {
+        // Add new reminder
+        const response = await fetch(`${API_URL}/reminders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newReminder),
+        });
+        const addedReminder = await response.json();
+        setReminders([...reminders, addedReminder]);
+      }
 
     // Schedule notifications for each day between startDate and endDate
     const startDate = new Date(selectedDates.startDate);
@@ -279,7 +332,10 @@ export default function MedicineReminder() {
         ? "Reminder updated successfully!"
         : "Reminder set successfully!"
     );
-  };
+  } catch (error) {
+    console.error("Error saving reminder:", error);
+  }
+};
 
   const handleEdit = (index: number) => {
     const reminder = reminders[index];
@@ -315,36 +371,81 @@ export default function MedicineReminder() {
     );
   };
 
-  const handleTaken = (index: number) => {
-    const updatedReminders = [...reminders];
-    const takenReminder = updatedReminders[index];
-    takenReminder.taken = true;
+  // const handleTaken = (index: number) => {
+  //   const updatedReminders = [...reminders];
+  //   const takenReminder = updatedReminders[index];
+  //   takenReminder.taken = true;
 
-    // Move the reminder to history
-    const updatedHistory = [...historyReminders, takenReminder];
-    setHistoryReminders(updatedHistory);
-    saveHistoryToStorage(updatedHistory);
+  //   // Move the reminder to history
+  //   const updatedHistory = [...historyReminders, takenReminder];
+  //   setHistoryReminders(updatedHistory);
+  //   saveHistoryToStorage(updatedHistory);
 
-    // Remove the reminder from the active list
-    updatedReminders.splice(index, 1);
-    setReminders(updatedReminders);
-    saveRemindersToStorage(updatedReminders);
+  //   // Remove the reminder from the active list
+  //   updatedReminders.splice(index, 1);
+  //   setReminders(updatedReminders);
+  //   saveRemindersToStorage(updatedReminders);
+  // };
+
+  const handleTaken = async (index: number) => {
+    try {
+      const response = await fetch(`${API_URL}/reminders/${reminders[index].id}/taken`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to mark reminder as taken");
+      }
+  
+      const data = await response.json();
+      console.log("Reminder marked as taken:", data);
+  
+      // Update local state
+      const updatedReminders = reminders.filter((_, i) => i !== index);
+      setReminders(updatedReminders);
+  
+      const updatedHistory = [...historyReminders, data.reminder];
+      setHistoryReminders(updatedHistory);
+    } catch (error) {
+      console.error("Error marking reminder as taken:", error);
+    }
   };
 
-  const handleSkipped = (index: number) => {
-    const updatedReminders = [...reminders];
-    const skippedReminder = updatedReminders[index];
-    skippedReminder.skipped = true;
+  // const handleSkipped = (index: number) => {
+  //   const updatedReminders = [...reminders];
+  //   const skippedReminder = updatedReminders[index];
+  //   skippedReminder.skipped = true;
 
-    // Move the reminder to history
-    const updatedHistory = [...historyReminders, skippedReminder];
-    setHistoryReminders(updatedHistory);
-    saveHistoryToStorage(updatedHistory);
+  //   // Move the reminder to history
+  //   const updatedHistory = [...historyReminders, skippedReminder];
+  //   setHistoryReminders(updatedHistory);
+  //   saveHistoryToStorage(updatedHistory);
 
-    // Remove the reminder from the active list
-    updatedReminders.splice(index, 1);
-    setReminders(updatedReminders);
-    saveRemindersToStorage(updatedReminders);
+  //   // Remove the reminder from the active list
+  //   updatedReminders.splice(index, 1);
+  //   setReminders(updatedReminders);
+  //   saveRemindersToStorage(updatedReminders);
+  // };
+  const handleSkipped = async (index: number) => {
+    try {
+      const response = await fetch(`${API_URL}/reminders/${reminders[index].id}/skipped`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to mark reminder as skipped");
+      }
+  
+      const data = await response.json();
+      console.log("Reminder marked as skipped:", data);
+  
+      // Update local state
+      const updatedReminders = reminders.filter((_, i) => i !== index);
+      setReminders(updatedReminders);
+  
+      const updatedHistory = [...historyReminders, data.reminder];
+      setHistoryReminders(updatedHistory);
+    } catch (error) {
+      console.error("Error marking reminder as skipped:", error);
+    }
   };
 
   const handleDeleteAllHistory = () => {
@@ -406,15 +507,7 @@ export default function MedicineReminder() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Set Reminder</Text>
-        <TouchableOpacity
-          onPress={() => setShowRemindersList(!showRemindersList)}
-        >
-          <Ionicons name="list" size={28} color="#2d3748" />
-        </TouchableOpacity>
-    
-      </View>
+      <View style={styles.headerContainer}></View>
 
       {showRemindersList ? (
         <RemindersList
@@ -427,11 +520,19 @@ export default function MedicineReminder() {
       ) : (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Add a New Reminder</Text>
-
+            <View style={styles.cardIconsContainer}>
+              <Text style={styles.cardTitle}>Add a New Reminder</Text>
+              <TouchableOpacity
+                onPress={() => setShowRemindersList(!showRemindersList)}
+                style={styles.iconButton}
+              >
+                <Ionicons name="list" size={28} color="#4A5568" />
+              </TouchableOpacity>
+            </View>
             <TextInput
               style={styles.input}
               placeholder="Medicine Name"
+              placeholderTextColor="#A0AEC0"
               value={medicineName}
               onChangeText={setMedicineName}
             />
@@ -439,6 +540,7 @@ export default function MedicineReminder() {
             <TextInput
               style={styles.input}
               placeholder="Description (optional)"
+              placeholderTextColor="#A0AEC0"
               value={medicineDescription}
               onChangeText={setMedicineDescription}
             />
@@ -481,6 +583,7 @@ export default function MedicineReminder() {
             <TextInput
               style={styles.input}
               placeholder="Number of Medications"
+              placeholderTextColor="#A0AEC0"
               value={numberOfMedications.toString()}
               onChangeText={(text) => setNumberOfMedications(Number(text))}
               keyboardType="numeric"
@@ -514,7 +617,8 @@ export default function MedicineReminder() {
                 <Text
                   style={[
                     styles.frequencyButtonText,
-                    frequency === "weekly" && styles.frequencyButtonTextSelected,
+                    frequency === "weekly" &&
+                      styles.frequencyButtonTextSelected,
                   ]}
                 >
                   Weekly
@@ -530,7 +634,8 @@ export default function MedicineReminder() {
                 <Text
                   style={[
                     styles.frequencyButtonText,
-                    frequency === "custom" && styles.frequencyButtonTextSelected,
+                    frequency === "custom" &&
+                      styles.frequencyButtonTextSelected,
                   ]}
                 >
                   Custom
@@ -607,7 +712,8 @@ export default function MedicineReminder() {
               renderItem={({ item }) => (
                 <View style={styles.historyItem}>
                   <Text style={styles.historyText}>
-                    {item.medicineName} - {new Date(item.time).toLocaleTimeString()}
+                    {item.medicineName} -{" "}
+                    {new Date(item.time).toLocaleTimeString()}
                   </Text>
                   <Text style={styles.historyText}>
                     {item.taken ? "Taken" : "Skipped"}
@@ -638,21 +744,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7FAFC",
-    padding: 16,
+    padding: 12,
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 24,
+    paddingTop: Platform.OS === "ios" ? 50 : 20, // Adjust for safe area
   },
   header: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#2D3748",
   },
-  listIcon: {
+  iconButton: {
     padding: 8,
+    borderRadius: 8,
+  },
+  cardIconsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
   },
   scrollContainer: {
     paddingBottom: 20,
@@ -663,10 +776,10 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   cardTitle: {
     fontSize: 22,
@@ -685,13 +798,18 @@ const styles = StyleSheet.create({
     color: "#2D3748",
   },
   imageButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#4C51BF",
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: 16,
+    shadowColor: "#4C51BF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   imageButtonText: {
     fontSize: 16,
@@ -700,13 +818,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   timeButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#4C51BF",
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: 16,
+    shadowColor: "#4C51BF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   timeButtonText: {
     fontSize: 16,
@@ -715,13 +838,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   calendarButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#4C51BF",
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
     marginBottom: 16,
+    shadowColor: "#4C51BF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   calendarButtonText: {
     fontSize: 16,
@@ -734,6 +862,11 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
+    shadowColor: "#48BB78",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   primaryButtonText: {
     fontSize: 16,
@@ -758,6 +891,11 @@ const styles = StyleSheet.create({
     padding: 20,
     width: "90%",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 22,
@@ -777,12 +915,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#4C51BF",
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
     width: "100%",
     marginBottom: 10,
+    shadowColor: "#4C51BF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   modalButtonText: {
     fontSize: 16,
@@ -803,14 +946,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#4A90E2",
+    borderColor: "#4C51BF",
   },
   frequencyButtonSelected: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#4C51BF",
   },
   frequencyButtonText: {
     fontSize: 14,
-    color: "#4A90E2",
+    color: "#4C51BF",
   },
   frequencyButtonTextSelected: {
     color: "#fff",

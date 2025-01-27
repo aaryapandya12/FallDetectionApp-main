@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as Progress from 'react-native-progress';
-import Footer from './Footer'; // Import the Footer component
+import Footer from './Footer';
 
 const ExerciseUI: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [currentExercise, setCurrentExercise] = useState<string>('Stretching');
@@ -36,7 +36,6 @@ const ExerciseUI: React.FC<{ navigation: any }> = ({ navigation }) => {
   }, [isTimerRunning, currentExercise]);
 
   useEffect(() => {
-    // Load saved progress from storage (simulated here)
     const savedProgress = [
       { date: '10/25/2023', duration: 1200 },
       { date: '10/24/2023', duration: 900 },

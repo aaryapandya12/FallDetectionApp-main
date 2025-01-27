@@ -22,6 +22,7 @@ type RootStackParamList = {
   SettingsScreen: undefined;
   MyProfileScreen: undefined;
   MonitoringScreen: undefined; // Add this line
+  EmergencyContact:undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
@@ -61,8 +62,9 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       description:
         "Quickly connect with family or nearby hospitals in emergencies.",
       background: require("../../assets/emg3.jpg"),
-      onPress: () => {}, // Add navigation if needed
+      onPress: () => navigation.navigate("EmergencyContact"), // Add navigation if needed
     },
+    
     {
       id: 4,
       icon: "location",
