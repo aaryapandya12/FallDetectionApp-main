@@ -79,7 +79,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       icon: "medkit", // Updated icon for Medicine Reminder
       title: "Medicine Reminder",
       description: "Set reminders for your medications and stay on track.",
-      background: require("../../assets/reminder.png"), // Add a relevant image
+      background: require("../../assets/emg3.jpg"), // Add a relevant image
       onPress: () => navigation.navigate("MedicineReminder"), // Add navigation
     },
   ];

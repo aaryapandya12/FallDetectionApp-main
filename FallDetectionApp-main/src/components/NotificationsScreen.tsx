@@ -499,7 +499,7 @@ const NotificationsScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       checkForFall();
-    }, 3600000); // Check for fall every 20 seconds
+    }, 10000); // Check for fall every 20 seconds
 
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
@@ -519,7 +519,7 @@ const NotificationsScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     ];
 
     try {
-      const response = await axios.post("http://192.168.1.3:8081/predict", {
+      const response = await axios.post("http://192.168.43.207:8081/predict", {
         data: newData,
       });
 

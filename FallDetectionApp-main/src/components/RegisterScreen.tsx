@@ -63,7 +63,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
     try {
       const userData = { email, username, password };
-      const response = await axios.post('http://192.168.1.4:5000/api/register', userData);
+      const response = await axios.post('http://192.168.43.207:5000/api/register', userData);
 
       if (response.status === 201) {
         await AsyncStorage.setItem('userData', JSON.stringify(userData));

@@ -116,7 +116,7 @@ const PersonalDetailScreen: React.FC<PersonalDetailScreenProps> = ({ navigation,
       emergencyContact2,
     };
 
-    const response = await axios.post('http://192.168.1.4:5000/api/api/save-details', userData);
+    const response = await axios.post('http://192.168.43.207:5000/api/api/save-details', userData);
 
     if (response.status === 200) {
       Alert.alert('Success', 'Details saved successfully');

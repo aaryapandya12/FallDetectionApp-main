@@ -56,7 +56,7 @@ export default function MedicineReminder() {
   const [numberOfMedications, setNumberOfMedications] = useState(1);
   const [showHistory, setShowHistory] = useState(false); // New state for history modal
 
-  const API_URL = "http://192.168.1.4:5000/api";
+  const API_URL = "http://192.168.43.207:5000/api";
 
   // Fetch reminders from the backend
   const fetchReminders = async () => {
@@ -84,6 +84,62 @@ export default function MedicineReminder() {
     fetchReminders();
     fetchHistoryReminders();
   }, []);
+
+  // const addReminder = async (reminder) => {
+  //   try {
+  //     const response = await fetch(`${API_URL}/reminders`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(reminder),
+  //     });
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error adding reminder:", error);
+  //     throw error;
+  //   }
+  // };
+
+  // const updateReminder = async (id, updatedReminder) => {
+  //   try {
+  //     const response = await fetch(`${API_URL}/reminders/${id}`, {
+  //       method: "PUT",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(updatedReminder),
+  //     });
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error updating reminder:", error);
+  //     throw error;
+  //   }
+  // };
+
+  const deleteReminder = async (id) => {
+    try {
+      const response = await fetch(`${API_URL}/reminders/${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error deleting reminder:", error);
+      throw error;
+    }
+  };
+
+  const deleteAllHistory = async () => {
+    try {
+      const response = await fetch(`${API_URL}/history`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error deleting history:", error);
+      throw error;
+    }
+  };
 
 
   useEffect(() => {
@@ -123,21 +179,6 @@ export default function MedicineReminder() {
     loadReminders();
   }, []);
 
-  const saveRemindersToStorage = async (reminders: Reminder[]) => {
-    try {
-      await AsyncStorage.setItem("reminders", JSON.stringify(reminders));
-    } catch (error) {
-      console.error("Error saving reminders to storage:", error);
-    }
-  };
-
-  const saveHistoryToStorage = async (history: Reminder[]) => {
-    try {
-      await AsyncStorage.setItem("historyReminders", JSON.stringify(history));
-    } catch (error) {
-      console.error("Error saving history to storage:", error);
-    }
-  };
 
   const handleNotificationReceived = async (
     notification: Notifications.Notification
@@ -260,18 +301,6 @@ export default function MedicineReminder() {
       numberOfMedications,
     };
 
-    // if (editingIndex !== null) {
-    //   const updatedReminders = [...reminders];
-    //   updatedReminders[editingIndex] = newReminder;
-    //   setReminders(updatedReminders);
-    //   saveRemindersToStorage(updatedReminders);
-    //   setEditingIndex(null);
-    // } else {
-    //   const updatedReminders = [...reminders, newReminder];
-    //   setReminders(updatedReminders);
-    //   saveRemindersToStorage(updatedReminders);
-    // }
-
     try {
       if (editingIndex !== null) {
         // Update reminder
@@ -352,7 +381,7 @@ export default function MedicineReminder() {
     setEditingIndex(index);
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = async (index: number) => {
     Alert.alert(
       "Delete Reminder",
       "Are you sure you want to delete this reminder?",
@@ -361,94 +390,75 @@ export default function MedicineReminder() {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            const updatedReminders = reminders.filter((_, i) => i !== index);
-            setReminders(updatedReminders);
-            saveRemindersToStorage(updatedReminders);
+          onPress: async () => {
+            try {
+              await deleteReminder(reminders[index].id);
+              const updatedReminders = reminders.filter((_, i) => i !== index);
+              setReminders(updatedReminders);
+            } catch (error) {
+              console.error("Error deleting reminder:", error);
+            }
           },
         },
       ]
     );
   };
 
-  // const handleTaken = (index: number) => {
-  //   const updatedReminders = [...reminders];
-  //   const takenReminder = updatedReminders[index];
-  //   takenReminder.taken = true;
-
-  //   // Move the reminder to history
-  //   const updatedHistory = [...historyReminders, takenReminder];
-  //   setHistoryReminders(updatedHistory);
-  //   saveHistoryToStorage(updatedHistory);
-
-  //   // Remove the reminder from the active list
-  //   updatedReminders.splice(index, 1);
-  //   setReminders(updatedReminders);
-  //   saveRemindersToStorage(updatedReminders);
-  // };
-
   const handleTaken = async (index: number) => {
     try {
-      const response = await fetch(`${API_URL}/reminders/${reminders[index].id}/taken`, {
-        method: "POST",
+      const reminder = reminders[index];
+      await fetch(`${API_URL}/reminders/${reminder.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...reminder, taken: true }),
       });
-      if (!response.ok) {
-        throw new Error("Failed to mark reminder as taken");
-      }
-  
-      const data = await response.json();
-      console.log("Reminder marked as taken:", data);
-  
-      // Update local state
+
+      await fetch(`${API_URL}/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...reminder, taken: true }),
+      });
+
       const updatedReminders = reminders.filter((_, i) => i !== index);
       setReminders(updatedReminders);
-  
-      const updatedHistory = [...historyReminders, data.reminder];
-      setHistoryReminders(updatedHistory);
+      fetchHistoryReminders();
     } catch (error) {
-      console.error("Error marking reminder as taken:", error);
+      console.error('Error marking reminder as taken:', error);
     }
   };
 
-  // const handleSkipped = (index: number) => {
-  //   const updatedReminders = [...reminders];
-  //   const skippedReminder = updatedReminders[index];
-  //   skippedReminder.skipped = true;
-
-  //   // Move the reminder to history
-  //   const updatedHistory = [...historyReminders, skippedReminder];
-  //   setHistoryReminders(updatedHistory);
-  //   saveHistoryToStorage(updatedHistory);
-
-  //   // Remove the reminder from the active list
-  //   updatedReminders.splice(index, 1);
-  //   setReminders(updatedReminders);
-  //   saveRemindersToStorage(updatedReminders);
-  // };
   const handleSkipped = async (index: number) => {
     try {
-      const response = await fetch(`${API_URL}/reminders/${reminders[index].id}/skipped`, {
-        method: "POST",
+      const reminder = reminders[index];
+      await fetch(`${API_URL}/reminders/${reminder.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...reminder, skipped: true }),
       });
-      if (!response.ok) {
-        throw new Error("Failed to mark reminder as skipped");
-      }
-  
-      const data = await response.json();
-      console.log("Reminder marked as skipped:", data);
-  
-      // Update local state
+
+      await fetch(`${API_URL}/history`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...reminder, skipped: true }),
+      });
+
       const updatedReminders = reminders.filter((_, i) => i !== index);
       setReminders(updatedReminders);
-  
-      const updatedHistory = [...historyReminders, data.reminder];
-      setHistoryReminders(updatedHistory);
+      fetchHistoryReminders();
     } catch (error) {
-      console.error("Error marking reminder as skipped:", error);
+      console.error('Error marking reminder as skipped:', error);
     }
   };
 
-  const handleDeleteAllHistory = () => {
+  const handleDeleteAllHistory = async () => {
     Alert.alert(
       "Delete All History",
       "Are you sure you want to delete all history?",
@@ -457,9 +467,13 @@ export default function MedicineReminder() {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            setHistoryReminders([]);
-            saveHistoryToStorage([]);
+          onPress: async () => {
+            try {
+              await deleteAllHistory();
+              setHistoryReminders([]);
+            } catch (error) {
+              console.error("Error deleting history:", error);
+            }
           },
         },
       ]
@@ -800,7 +814,7 @@ const styles = StyleSheet.create({
   imageButton: {
     backgroundColor: "#4C51BF",
     padding: 14,
-    borderRadius: 8,
+    borderRadius: 18,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
@@ -820,7 +834,7 @@ const styles = StyleSheet.create({
   timeButton: {
     backgroundColor: "#4C51BF",
     padding: 14,
-    borderRadius: 8,
+    borderRadius: 18,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",
@@ -840,7 +854,7 @@ const styles = StyleSheet.create({
   calendarButton: {
     backgroundColor: "#4C51BF",
     padding: 14,
-    borderRadius: 8,
+    borderRadius: 18,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",

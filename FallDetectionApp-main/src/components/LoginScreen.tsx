@@ -262,7 +262,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       clearUserData();
 
       // Perform login API call
-      const response = await axios.post('http://192.168.1.4:5000/login', {
+      const response = await axios.post('http://192.168.43.207:5000/login', {
         email,
         password,
       });
@@ -272,7 +272,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         setUserEmail(email);
 
         // Fetch the user's personal details
-        const userDetailsResponse = await axios.get(`http://192.168.1.3:5000/api/user-details?email=${email}`);
+        const userDetailsResponse = await axios.get(`http://192.168.43.207:5000/api/user-details?email=${email}`);
         if (userDetailsResponse.status === 200) {
           setUserData(userDetailsResponse.data); // Set user data in context
         }
